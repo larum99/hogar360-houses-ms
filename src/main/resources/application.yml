@@ -1,0 +1,13 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: hogar360-casas-ms
+  datasource:
+    url: jdbc:mysql://localhost:3306/hogar360_houses
+    username: ${user}
+    password: ${password}
+  jpa:
+    hibernate:
+      ddl-auto: update
