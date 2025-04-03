@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LocationDtoMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "city", ignore = true) // We will set the CityModel in the service layer
+    @Mapping(target = "city", ignore = true)
     @Mapping(source = "sector", target = "sector")
     LocationModel requestToModel(SaveLocationRequest saveLocationRequest);
 }

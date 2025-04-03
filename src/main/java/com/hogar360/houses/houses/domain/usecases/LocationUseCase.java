@@ -4,6 +4,7 @@ import com.hogar360.houses.houses.domain.exceptions.CityNotFoundException;
 import com.hogar360.houses.houses.domain.exceptions.LocationSectorMaxSizeExceededException;
 import com.hogar360.houses.houses.domain.model.CityModel;
 import com.hogar360.houses.houses.domain.model.LocationModel;
+import com.hogar360.houses.houses.domain.model.PageModel;
 import com.hogar360.houses.houses.domain.ports.in.LocationServicePort;
 import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
@@ -32,6 +33,11 @@ public class LocationUseCase implements LocationServicePort {
         LocationModel newLocation = new LocationModel(null, city, sector);
 
         return locationPersistencePort.save(newLocation);
+    }
+
+    @Override
+    public PageModel<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection) {
+        return locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection);
     }
 
 }
