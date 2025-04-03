@@ -5,7 +5,7 @@
 <html id="htmlId">
 <head>
   <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
-  <title>Coverage Report > CategoryServicePort</title>
+  <title>Coverage Report > LocationServicePort</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/idea.min.css";
@@ -22,14 +22,14 @@ Current scope:     <a href="../../index.html">all classes</a>
     <a href="../index.html">com.hogar360.houses.houses.domain.ports.in</a>
 </div>
 
-<h1>Coverage Summary for Class: CategoryServicePort (com.hogar360.houses.houses.domain.ports.in)</h1>
+<h1>Coverage Summary for Class: LocationServicePort (com.hogar360.houses.houses.domain.ports.in)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">CategoryServicePort</td>
+  <td class="name">LocationServicePort</td>
 </tr>
 
 </table>
@@ -41,12 +41,11 @@ Current scope:     <a href="../../index.html">all classes</a>
 <pre>
 <code class="sourceCode" id="sourceCode">&nbsp;package com.hogar360.houses.houses.domain.ports.in;
 &nbsp;
-&nbsp;import com.hogar360.houses.houses.domain.model.CategoryModel;
-&nbsp;import com.hogar360.houses.houses.domain.model.PageModel;
+&nbsp;import com.hogar360.houses.houses.domain.model.LocationModel;
 &nbsp;
-&nbsp;public interface CategoryServicePort {
-&nbsp;    void save(CategoryModel categoryModel);
-&nbsp;    PageModel&lt;CategoryModel&gt; listCategories(int page, int size, boolean orderAsc);
+&nbsp;
+&nbsp;public interface LocationServicePort {
+&nbsp;    LocationModel createLocation(Long cityId, String sector);
 &nbsp;
 &nbsp;}
 </code>
@@ -72,7 +71,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2025-03-31 22:11</div>
+    <div style="float:right;">generated on 2025-04-02 21:04</div>
 </div>
 </body>
 </html>

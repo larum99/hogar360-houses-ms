@@ -9,8 +9,6 @@ import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 
-import java.util.Optional;
-
 public class LocationUseCase implements LocationServicePort {
     private final CityPersistencePort cityPersistencePort;
     private final LocationPersistencePort locationPersistencePort;
