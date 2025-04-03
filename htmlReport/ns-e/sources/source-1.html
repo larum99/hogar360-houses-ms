@@ -1,0 +1,142 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CategoryController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.hogar360.houses.houses.infraestructure.endpoints.rest</a>
+</div>
+
+<h1>Coverage Summary for Class: CategoryController (com.hogar360.houses.houses.infraestructure.endpoints.rest)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CategoryController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.hogar360.houses.houses.infraestructure.endpoints.rest;
+&nbsp;
+&nbsp;import com.hogar360.houses.houses.application.dto.request.ListCategoriesRequest;
+&nbsp;import com.hogar360.houses.houses.application.dto.request.SaveCategoryRequest;
+&nbsp;import com.hogar360.houses.houses.application.dto.response.PagedCategoryResponse;
+&nbsp;import com.hogar360.houses.houses.application.dto.response.SaveCategoryResponse;
+&nbsp;import com.hogar360.houses.houses.application.services.CategoryService;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.Parameter;
+&nbsp;import io.swagger.v3.oas.annotations.tags.Tag;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/api/v1/category&quot;)
+&nbsp;@RequiredArgsConstructor
+&nbsp;@Tag(name = &quot;Categorías&quot;, description = &quot;Operaciones relacionadas con las categorías&quot;)
+&nbsp;public class CategoryController {
+&nbsp;    private final CategoryService categoryService;
+&nbsp;
+&nbsp;    @PostMapping(&quot;/&quot;)
+&nbsp;    @Operation(summary = &quot;Guardar categoría&quot;, description = &quot;Crea una nueva categoría en el sistema&quot;)
+&nbsp;    public ResponseEntity&lt;SaveCategoryResponse&gt; save(@RequestBody SaveCategoryRequest saveCategoryRequest) {
+<b class="nc">&nbsp;        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(saveCategoryRequest));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/&quot;)
+&nbsp;    @Operation(summary = &quot;Listar categorías&quot;, description = &quot;Lista todas las categorías de inmuebles de forma paginada&quot;)
+&nbsp;    public ResponseEntity&lt;PagedCategoryResponse&gt; listCategories(
+&nbsp;            @Parameter(description = &quot;Número de página a mostrar (comienza en 0)&quot;, example = &quot;0&quot;) @RequestParam(defaultValue = &quot;0&quot;) int page,
+&nbsp;            @Parameter(description = &quot;Cantidad de categorías por página&quot;, example = &quot;10&quot;) @RequestParam(defaultValue = &quot;10&quot;) int size,
+&nbsp;            @Parameter(description = &quot;Indica si se debe ordenar ascendentemente por nombre&quot;, example = &quot;true&quot;) @RequestParam(defaultValue = &quot;true&quot;) boolean orderAsc) {
+<b class="nc">&nbsp;        ListCategoriesRequest request = new ListCategoriesRequest(page, size, orderAsc);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(categoryService.listCategories(request));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-02 21:04</div>
+</div>
+</body>
+</html>

@@ -1,8 +1,6 @@
 package com.hogar360.houses.houses.infraestructure.exceptionshandlers;
 
-import com.hogar360.houses.houses.domain.exceptions.CategoryAlreadyExistsException;
-import com.hogar360.houses.houses.domain.exceptions.CategoryDescriptionMaxSizeExceededException;
-import com.hogar360.houses.houses.domain.exceptions.CategoryNameMaxSizeExceededException;
+import com.hogar360.houses.houses.domain.exceptions.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +24,24 @@ public class ControllerAdvisor {
     @ExceptionHandler(CategoryAlreadyExistsException.class)
     public ResponseEntity<ExceptionResponse> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.CATEGORY_EXISTS_EXCEPTION,
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleDepartmentNotFoundException(DepartmentNotFoundException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.DEPARTMENT_NOT_FOUND_EXCEPTION,
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(CityNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleCityNotFoundException(CityNotFoundException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.CITY_NOT_FOUND_EXCEPTION,
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(LocationSectorMaxSizeExceededException.class)
+    public ResponseEntity<ExceptionResponse> handleLocationSectorMaxSizeExceededException(LocationSectorMaxSizeExceededException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.LOCATION_SECTOR_MAX_SIZE_MESSAGE,
                 LocalDateTime.now()));
     }
 }
