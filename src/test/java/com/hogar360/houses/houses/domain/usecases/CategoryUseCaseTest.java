@@ -2,7 +2,7 @@ package com.hogar360.houses.houses.domain.usecases;
 
 import com.hogar360.houses.houses.domain.exceptions.CategoryAlreadyExistsException;
 import com.hogar360.houses.houses.domain.model.CategoryModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,11 +62,11 @@ class CategoryUseCaseTest {
                 new CategoryModel(1L, "Category A", "Description A"),
                 new CategoryModel(2L, "Category B", "Description B")
         );
-        PageModel<CategoryModel> expectedPage = new PageModel<>(categories, 2, 1, 0, 10, true, true);
+        PageResult<CategoryModel> expectedPage = new PageResult<>(categories, 2, 1, 0, 10, true, true);
 
         when(categoryPersistencePort.listCategories(page, size, orderAsc)).thenReturn(expectedPage);
 
-        PageModel<CategoryModel> actualPage = categoryUseCase.listCategories(page, size, orderAsc);
+        PageResult<CategoryModel> actualPage = categoryUseCase.listCategories(page, size, orderAsc);
 
         assertEquals(expectedPage, actualPage);
         verify(categoryPersistencePort, times(1)).listCategories(page, size, orderAsc);
@@ -81,11 +81,11 @@ class CategoryUseCaseTest {
                 new CategoryModel(2L, "Category B", "Description B"),
                 new CategoryModel(1L, "Category A", "Description A")
         );
-        PageModel<CategoryModel> expectedPage = new PageModel<>(categories, 2, 1, 0, 10, true, true);
+        PageResult<CategoryModel> expectedPage = new PageResult<>(categories, 2, 1, 0, 10, true, true);
 
         when(categoryPersistencePort.listCategories(page, size, orderAsc)).thenReturn(expectedPage);
 
-        PageModel<CategoryModel> actualPage = categoryUseCase.listCategories(page, size, orderAsc);
+        PageResult<CategoryModel> actualPage = categoryUseCase.listCategories(page, size, orderAsc);
 
         assertEquals(expectedPage, actualPage);
         verify(categoryPersistencePort, times(1)).listCategories(page, size, orderAsc);

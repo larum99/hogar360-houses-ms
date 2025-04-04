@@ -9,14 +9,13 @@ import com.hogar360.houses.houses.application.dto.response.SaveCategoryResponse;
 import com.hogar360.houses.houses.application.mappers.CategoryDtoMapper;
 import com.hogar360.houses.houses.application.services.CategoryService;
 import com.hogar360.houses.houses.domain.model.CategoryModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.in.CategoryServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +31,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public PagedCategoryResponse listCategories(ListCategoriesRequest request) {
-        PageModel<CategoryModel> categoryPage = categoryServicePort.listCategories(request.page(), request.size(), request.orderAsc());
+        PageResult<CategoryModel> categoryPage = categoryServicePort.listCategories(request.page(), request.size(), request.orderAsc());
         List<CategoryResponse> categoryResponses = categoryPage.getContent().stream()
                 .map(categoryDtoMapper::modelToResponse)
-                .collect(Collectors.toList());
+                .toList();
 
         return new PagedCategoryResponse(
                 categoryResponses,

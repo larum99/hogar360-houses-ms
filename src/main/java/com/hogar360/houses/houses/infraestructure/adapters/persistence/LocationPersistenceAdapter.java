@@ -1,18 +1,18 @@
 package com.hogar360.houses.houses.infraestructure.adapters.persistence;
 
 import com.hogar360.houses.houses.domain.model.LocationModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
+import com.hogar360.houses.houses.infraestructure.entities.LocationEntity;
 import com.hogar360.houses.houses.infraestructure.mappers.LocationEntityMapper;
 import com.hogar360.houses.houses.infraestructure.repositories.mysql.LocationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,11 +36,11 @@ public class LocationPersistenceAdapter implements LocationPersistencePort {
     }
 
     @Override
-    public PageModel<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection) {
+    public PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection) {
         Sort sort = createSort(sortBy, sortDirection);
         Pageable pageable = createPageable(page, size, sort);
 
-        org.springframework.data.domain.Page<com.hogar360.houses.houses.infraestructure.entities.LocationEntity> locationEntityPage =
+        Page<LocationEntity> locationEntityPage =
                 locationRepository.findByCity_NameContainingIgnoreCaseOrCity_Department_NameContainingIgnoreCase(searchTerm, searchTerm, pageable);
 
         return convertToPageModel(locationEntityPage);
@@ -58,11 +58,11 @@ public class LocationPersistenceAdapter implements LocationPersistencePort {
         return PageRequest.of(page, size, sort);
     }
 
-    private PageModel<LocationModel> convertToPageModel(org.springframework.data.domain.Page<com.hogar360.houses.houses.infraestructure.entities.LocationEntity> entityPage) {
-        return new PageModel<>(
+    private PageResult<LocationModel> convertToPageModel(org.springframework.data.domain.Page<com.hogar360.houses.houses.infraestructure.entities.LocationEntity> entityPage) {
+        return new PageResult<>(
                 entityPage.getContent().stream()
                         .map(locationEntityMapper::entityToModel)
-                        .collect(Collectors.toList()),
+                        .toList(),
                 entityPage.getTotalElements(),
                 entityPage.getTotalPages(),
                 entityPage.getNumber(),

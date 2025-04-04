@@ -1,11 +1,13 @@
 package com.hogar360.houses.houses.infraestructure.adapters.persistence;
 
 import com.hogar360.houses.houses.domain.model.CategoryModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
+import com.hogar360.houses.houses.infraestructure.entities.CategoryEntity;
 import com.hogar360.houses.houses.infraestructure.mappers.CategoryEntityMapper;
 import com.hogar360.houses.houses.infraestructure.repositories.mysql.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,17 +34,17 @@ public class CategoryPersistenceAdapter implements CategoryPersistencePort {
     }
 
     @Override
-    public PageModel<CategoryModel> listCategories(int page, int size, boolean orderAsc) {
+    public PageResult<CategoryModel> listCategories(int page, int size, boolean orderAsc) {
         Sort sort = orderAsc ? Sort.by("name").ascending() : Sort.by("name").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        org.springframework.data.domain.Page<com.hogar360.houses.houses.infraestructure.entities.CategoryEntity> entityPage =
+        Page<CategoryEntity> entityPage =
                 categoryRepository.findAll(pageable);
 
         List<CategoryModel> categoryModels = entityPage.getContent().stream()
                 .map(categoryEntityMapper::entityToModel)
-                .collect(java.util.stream.Collectors.toList());
+                .toList();
 
-        return new PageModel<>(
+        return new PageResult<>(
                 categoryModels,
                 entityPage.getTotalElements(),
                 entityPage.getTotalPages(),

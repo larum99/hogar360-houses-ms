@@ -5,7 +5,7 @@ import com.hogar360.houses.houses.domain.exceptions.LocationSectorMaxSizeExceede
 import com.hogar360.houses.houses.domain.model.CityModel;
 import com.hogar360.houses.houses.domain.model.DepartmentModel;
 import com.hogar360.houses.houses.domain.model.LocationModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
@@ -96,11 +96,11 @@ class LocationUseCaseTest {
         String sortBy = "city.name";
         String sortDirection = "asc";
 
-        PageModel<LocationModel> expectedPage = new PageModel<>(Collections.emptyList(), 0, 0, 0, 0, true, true);
+        PageResult<LocationModel> expectedPage = new PageResult<>(Collections.emptyList(), 0, 0, 0, 0, true, true);
 
         when(locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection)).thenReturn(expectedPage);
 
-        PageModel<LocationModel> result = locationUseCase.searchLocations(searchTerm, page, size, sortBy, sortDirection);
+        PageResult<LocationModel> result = locationUseCase.searchLocations(searchTerm, page, size, sortBy, sortDirection);
 
         assertNotNull(result);
         assertEquals(expectedPage, result);
