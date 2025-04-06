@@ -1,10 +1,9 @@
 package com.hogar360.houses.houses.domain.ports.out;
 
 import com.hogar360.houses.houses.domain.model.LocationModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 
 public interface LocationPersistencePort {
     LocationModel save(LocationModel locationModel);
-    LocationModel getById(Long id);
-    PageModel<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection);
+    PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection);
 }

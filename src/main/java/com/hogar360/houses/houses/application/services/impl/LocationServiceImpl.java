@@ -5,21 +5,22 @@ import com.hogar360.houses.houses.application.dto.request.SaveLocationRequest;
 import com.hogar360.houses.houses.application.dto.response.LocationResponse;
 import com.hogar360.houses.houses.application.dto.response.PagedLocationResponse;
 import com.hogar360.houses.houses.application.dto.response.SaveLocationResponse;
+import com.hogar360.houses.houses.application.mappers.LocationDtoMapper;
 import com.hogar360.houses.houses.application.services.LocationService;
 import com.hogar360.houses.houses.domain.model.LocationModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.in.LocationServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LocationServiceImpl implements LocationService {
     private final LocationServicePort locationServicePort;
+    private final LocationDtoMapper locationDtoMapper;
 
     @Override
     public SaveLocationResponse save(SaveLocationRequest request) {
@@ -29,15 +30,9 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public PagedLocationResponse searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection) {
-        PageModel<LocationModel> locationPage = locationServicePort.searchLocations(searchTerm, page, size, sortBy, sortDirection);
-        List<LocationResponse> locationResponses = locationPage.getContent().stream()
-                .map(locationModel -> new LocationResponse(
-                        locationModel.getId(),
-                        locationModel.getCity().getName(),
-                        locationModel.getCity().getDepartment().getName(),
-                        locationModel.getSector()
-                ))
-                .collect(Collectors.toList());
+        PageResult<LocationModel> locationPage = locationServicePort.searchLocations(searchTerm, page, size, sortBy, sortDirection);
+
+        List<LocationResponse> locationResponses = locationDtoMapper.modelToResponseList(locationPage.getContent());
 
         return new PagedLocationResponse(
                 locationResponses,

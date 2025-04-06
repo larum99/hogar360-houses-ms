@@ -21,17 +21,8 @@ public class CityPersistenceAdapter implements CityPersistencePort {
     private final CityEntityMapper cityEntityMapper;
 
     @Override
-    public CityModel getByNameAndDepartment(String name, DepartmentModel department) {
-        DepartmentEntity departmentEntity = new DepartmentEntity();
-        departmentEntity.setId(department.getId());
-        departmentEntity.setName(department.getName());
-
-        return cityEntityMapper.entityToModel(cityRepository.findByNameAndDepartment(name, departmentEntity).orElse(null));
-    }
-
-    @Override
     public CityModel getCityById(Long id) {
-        Optional<CityEntity> cityEntityOptional = cityRepository.findById(id);
-        return cityEntityOptional.map(cityEntityMapper::entityToModel).orElse(null);
+        CityEntity cityEntity = cityRepository.findById(id).orElse(null);
+        return cityEntityMapper.entityToModel(cityEntity);
     }
 }

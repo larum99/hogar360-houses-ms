@@ -1,16 +1,20 @@
 package com.hogar360.houses.houses.application.mappers;
 
-import com.hogar360.houses.houses.application.dto.request.SaveLocationRequest;
+import com.hogar360.houses.houses.application.dto.response.LocationResponse;
 import com.hogar360.houses.houses.domain.model.LocationModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LocationDtoMapper {
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "city", ignore = true)
-    @Mapping(source = "sector", target = "sector")
-    LocationModel requestToModel(SaveLocationRequest saveLocationRequest);
+
+    @Mapping(source = "city.name", target = "cityName")
+    @Mapping(source = "city.department.name", target = "departmentName")
+    LocationResponse modelToResponse(LocationModel locationModel);
+
+    List<LocationResponse> modelToResponseList(List<LocationModel> locationModels);
 }

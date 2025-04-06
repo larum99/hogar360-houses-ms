@@ -2,13 +2,16 @@ package com.hogar360.houses.houses.domain.usecases;
 
 import com.hogar360.houses.houses.domain.exceptions.CityNotFoundException;
 import com.hogar360.houses.houses.domain.exceptions.LocationSectorMaxSizeExceededException;
+import com.hogar360.houses.houses.domain.exceptions.PageNumberNegativeException;
+import com.hogar360.houses.houses.domain.exceptions.PageSizeInvalidException;
 import com.hogar360.houses.houses.domain.model.CityModel;
 import com.hogar360.houses.houses.domain.model.DepartmentModel;
 import com.hogar360.houses.houses.domain.model.LocationModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +25,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LocationUseCaseTest {
+
     @Mock
     private CityPersistencePort cityPersistencePort;
 
@@ -31,79 +35,105 @@ class LocationUseCaseTest {
     @InjectMocks
     private LocationUseCase locationUseCase;
 
+    private CityModel cityModel;
+    private Long cityId = 1L;
+    private String validSector = "Neighborhood A";
+
+    @BeforeEach
+    void setUp() {
+        DepartmentModel dummyDepartment = new DepartmentModel();
+        cityModel = new CityModel(cityId, "Test City", null, dummyDepartment);
+    }
+
     @Test
-    void createLocation_validInput_shouldReturnSavedLocation() {
+    void createLocation_shouldCreateLocation_whenCityExistsAndSectorIsValid() {
+        when(cityPersistencePort.getCityById(cityId)).thenReturn(cityModel);
+        LocationModel expectedLocation = new LocationModel(null, cityModel, validSector);
+        when(locationPersistencePort.save(any(LocationModel.class))).thenReturn(expectedLocation);
 
-        Long cityId = 1L;
-        String sector = "My Sector";
+        LocationModel actualLocation = locationUseCase.createLocation(cityId, validSector);
 
-        DepartmentModel department = new DepartmentModel(1L, "Department Name", "Department Description");
-
-        CityModel city = new CityModel(cityId, "City Name", "Description", department);
-
-        LocationModel savedLocation = new LocationModel(1L, city, sector);
-
-        when(cityPersistencePort.getCityById(cityId)).thenReturn(city);
-        when(locationPersistencePort.save(any(LocationModel.class))).thenReturn(savedLocation);
-
-        LocationModel result = locationUseCase.createLocation(cityId, sector);
-
-        assertNotNull(result);
-        assertEquals(savedLocation.getId(), result.getId());
-        assertEquals(savedLocation.getCity(), result.getCity());
-        assertEquals(savedLocation.getSector(), result.getSector());
+        assertEquals(expectedLocation.getCity(), actualLocation.getCity());
+        assertEquals(expectedLocation.getSector(), actualLocation.getSector());
         verify(cityPersistencePort, times(1)).getCityById(cityId);
         verify(locationPersistencePort, times(1)).save(any(LocationModel.class));
     }
 
     @Test
-    void createLocation_cityNotFound_shouldThrowCityNotFoundException() {
-
-        Long cityId = 1L;
-        String sector = "My Sector";
-
+    void createLocation_shouldThrowCityNotFoundException_whenCityDoesNotExist() {
         when(cityPersistencePort.getCityById(cityId)).thenReturn(null);
 
-        assertThrows(CityNotFoundException.class, () -> locationUseCase.createLocation(cityId, sector));
+        assertThrows(CityNotFoundException.class, () -> locationUseCase.createLocation(cityId, validSector));
+
         verify(cityPersistencePort, times(1)).getCityById(cityId);
         verify(locationPersistencePort, never()).save(any());
     }
 
     @Test
-    void createLocation_sectorTooLong_shouldThrowLocationSectorMaxSizeExceededException() {
+    void createLocation_shouldThrowLocationSectorMaxSizeExceededException_whenSectorIsTooLong() {
+        when(cityPersistencePort.getCityById(cityId)).thenReturn(cityModel);
+        String longSector = "a".repeat(DomainConstants.MAX_SECTOR_LENGTH + 1);
 
-        Long cityId = 1L;
-        String sector = "This is a sector name that is much longer than the maximum allowed length of " + DomainConstants.MAX_SECTOR_LENGTH;
-        String cityName = "City Name";
-        String cityDescription = "Description";
+        assertThrows(LocationSectorMaxSizeExceededException.class, () -> locationUseCase.createLocation(cityId, longSector));
 
-        DepartmentModel department = new DepartmentModel(1L, "Department Name", "Department Description");
-
-        CityModel city = new CityModel(cityId, cityName, cityDescription, department);
-
-        when(cityPersistencePort.getCityById(cityId)).thenReturn(city);
-
-        assertThrows(LocationSectorMaxSizeExceededException.class, () -> locationUseCase.createLocation(cityId, sector));
         verify(cityPersistencePort, times(1)).getCityById(cityId);
         verify(locationPersistencePort, never()).save(any());
     }
 
     @Test
-    void searchLocations_shouldCallPersistencePortWithCorrectParameters() {
-        String searchTerm = "test";
+    void createLocation_shouldCreateLocation_whenSectorIsNull() {
+        when(cityPersistencePort.getCityById(cityId)).thenReturn(cityModel);
+        LocationModel expectedLocation = new LocationModel(null, cityModel, null);
+        when(locationPersistencePort.save(any(LocationModel.class))).thenReturn(expectedLocation);
+
+        LocationModel actualLocation = locationUseCase.createLocation(cityId, null);
+
+        assertEquals(expectedLocation.getCity(), actualLocation.getCity());
+        assertEquals(expectedLocation.getSector(), actualLocation.getSector());
+        verify(cityPersistencePort, times(1)).getCityById(cityId);
+        verify(locationPersistencePort, times(1)).save(any(LocationModel.class));
+    }
+
+    @Test
+    void searchLocations_shouldReturnPageResult_whenValidParametersAreProvided() {
+        String searchTerm = "Test";
         int page = 0;
         int size = 10;
-        String sortBy = "city.name";
+        String sortBy = "name";
+        String sortDirection = "asc";
+        // Assuming PageResult constructor takes (content, totalElements, totalPages, currentPage, pageSize, isFirst, isLast)
+        PageResult<LocationModel> expectedResult = new PageResult<>(Collections.emptyList(), 0L, 0, 0, 10, true, true);
+        when(locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection)).thenReturn(expectedResult);
+
+        PageResult<LocationModel> actualResult = locationUseCase.searchLocations(searchTerm, page, size, sortBy, sortDirection);
+
+        assertEquals(expectedResult, actualResult);
+        verify(locationPersistencePort, times(1)).searchLocations(searchTerm, page, size, sortBy, sortDirection);
+    }
+
+    @Test
+    void searchLocations_shouldThrowPageNumberNegativeException_whenPageIsNegative() {
+        String searchTerm = "Test";
+        int page = -1;
+        int size = 10;
+        String sortBy = "name";
         String sortDirection = "asc";
 
-        PageModel<LocationModel> expectedPage = new PageModel<>(Collections.emptyList(), 0, 0, 0, 0, true, true);
+        assertThrows(PageNumberNegativeException.class, () -> locationUseCase.searchLocations(searchTerm, page, size, sortBy, sortDirection));
 
-        when(locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection)).thenReturn(expectedPage);
+        verify(locationPersistencePort, never()).searchLocations(anyString(), anyInt(), anyInt(), anyString(), anyString());
+    }
 
-        PageModel<LocationModel> result = locationUseCase.searchLocations(searchTerm, page, size, sortBy, sortDirection);
+    @Test
+    void searchLocations_shouldThrowPageSizeInvalidException_whenSizeIsInvalid() {
+        String searchTerm = "Test";
+        int page = 0;
+        int size = DomainConstants.DEFAULT_SIZE_NUMBER;
+        String sortBy = "name";
+        String sortDirection = "asc";
 
-        assertNotNull(result);
-        assertEquals(expectedPage, result);
-        verify(locationPersistencePort, times(1)).searchLocations(searchTerm, page, size, sortBy, sortDirection);
+        assertThrows(PageSizeInvalidException.class, () -> locationUseCase.searchLocations(searchTerm, page, size, sortBy, sortDirection));
+
+        verify(locationPersistencePort, never()).searchLocations(anyString(), anyInt(), anyInt(), anyString(), anyString());
     }
 }

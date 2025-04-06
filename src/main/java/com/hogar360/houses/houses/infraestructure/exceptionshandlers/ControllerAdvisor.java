@@ -44,4 +44,17 @@ public class ControllerAdvisor {
         return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.LOCATION_SECTOR_MAX_SIZE_MESSAGE,
                 LocalDateTime.now()));
     }
+
+    @ExceptionHandler(PageNumberNegativeException.class)
+    public ResponseEntity<ExceptionResponse> handlePageNumberNegativeException(PageNumberNegativeException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.PAGE_NUMBER_NEGATIVE_EXCEPTION,
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(PageSizeInvalidException.class)
+    public ResponseEntity<ExceptionResponse> handlePageSizeInvalidException(PageSizeInvalidException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.PAGE_SIZE_INVALID_EXCEPTION,
+                LocalDateTime.now()));
+    }
+
 }

@@ -1,8 +1,8 @@
-package com.hogar360.houses.houses.domain.model;
+package com.hogar360.houses.houses.domain.utils;
 
 import java.util.List;
 
-public class PageModel<T> {
+public class PageResult<T> {
     private List<T> content;
     private long totalElements;
     private int totalPages;
@@ -11,7 +11,7 @@ public class PageModel<T> {
     private boolean isFirst;
     private boolean isLast;
 
-    public PageModel(List<T> content, long totalElements, int totalPages, int currentPage, int pageSize, boolean isFirst, boolean isLast) {
+    public PageResult(List<T> content, long totalElements, int totalPages, int currentPage, int pageSize, boolean isFirst, boolean isLast) {
         this.content = content;
         this.totalElements = totalElements;
         this.totalPages = totalPages;

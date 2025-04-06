@@ -2,9 +2,11 @@ package com.hogar360.houses.houses.domain.usecases;
 
 import com.hogar360.houses.houses.domain.exceptions.CityNotFoundException;
 import com.hogar360.houses.houses.domain.exceptions.LocationSectorMaxSizeExceededException;
+import com.hogar360.houses.houses.domain.exceptions.PageNumberNegativeException;
+import com.hogar360.houses.houses.domain.exceptions.PageSizeInvalidException;
 import com.hogar360.houses.houses.domain.model.CityModel;
 import com.hogar360.houses.houses.domain.model.LocationModel;
-import com.hogar360.houses.houses.domain.model.PageModel;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.in.LocationServicePort;
 import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
@@ -21,14 +23,8 @@ public class LocationUseCase implements LocationServicePort {
 
     @Override
     public LocationModel createLocation(Long cityId, String sector) {
-        CityModel city = cityPersistencePort.getCityById(cityId);
-        if (city == null) {
-            throw new CityNotFoundException();
-        }
-
-        if (sector != null && sector.length() > DomainConstants.MAX_SECTOR_LENGTH) {
-            throw new LocationSectorMaxSizeExceededException();
-        }
+        CityModel city = validateAndGetCity(cityId);
+        validateSectorLength(sector);
 
         LocationModel newLocation = new LocationModel(null, city, sector);
 
@@ -36,8 +32,35 @@ public class LocationUseCase implements LocationServicePort {
     }
 
     @Override
-    public PageModel<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection) {
+    public PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection) {
+        validatePageNumber(page);
+        validatePageSize(size);
         return locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection);
     }
 
+    private CityModel validateAndGetCity(Long cityId) {
+        CityModel city = cityPersistencePort.getCityById(cityId);
+        if (city == null) {
+            throw new CityNotFoundException();
+        }
+        return city;
+    }
+
+    private void validateSectorLength(String sector) {
+        if (sector != null && sector.length() > DomainConstants.MAX_SECTOR_LENGTH) {
+            throw new LocationSectorMaxSizeExceededException();
+        }
+    }
+
+    private void validatePageNumber(int page) {
+        if (page < DomainConstants.DEFAULT_PAGE_NUMBER) {
+            throw new PageNumberNegativeException();
+        }
+    }
+
+    private void validatePageSize(int size) {
+        if (size <= DomainConstants.DEFAULT_SIZE_NUMBER) {
+            throw new PageSizeInvalidException();
+        }
+    }
 }

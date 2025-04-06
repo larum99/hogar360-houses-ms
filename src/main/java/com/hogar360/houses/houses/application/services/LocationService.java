@@ -7,5 +7,4 @@ import com.hogar360.houses.houses.application.dto.response.SaveLocationResponse;
 public interface LocationService {
     SaveLocationResponse save(SaveLocationRequest request);
     PagedLocationResponse searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection);
-
 }
