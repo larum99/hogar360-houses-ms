@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.hogar360.houses.commons.configurations.utils.SortUtils.createSort;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class CategoryPersistenceAdapter implements CategoryPersistencePort {
 
     @Override
     public PageResult<CategoryModel> listCategories(int page, int size, boolean orderAsc) {
-        Sort sort = orderAsc ? Sort.by("name").ascending() : Sort.by("name").descending();
+        Sort sort = createSort("name", orderAsc);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<CategoryEntity> entityPage =
                 categoryRepository.findAll(pageable);

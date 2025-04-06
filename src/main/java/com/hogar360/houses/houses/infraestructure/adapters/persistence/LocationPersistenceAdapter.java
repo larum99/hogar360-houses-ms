@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.hogar360.houses.commons.configurations.utils.SortUtils.createSort;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,24 +35,12 @@ public class LocationPersistenceAdapter implements LocationPersistencePort {
     @Override
     public PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection) {
         Sort sort = createSort(sortBy, sortDirection);
-        Pageable pageable = createPageable(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<LocationEntity> locationEntityPage =
                 locationRepository.searchByCityOrDepartment(searchTerm, pageable);
 
         return convertToPageModel(locationEntityPage);
-    }
-
-    private Sort createSort(String sortBy, String sortDirection) {
-        Sort sort = Sort.by(sortBy);
-        if (sortDirection != null && sortDirection.equalsIgnoreCase("desc")) {
-            sort = sort.descending();
-        }
-        return sort;
-    }
-
-    private Pageable createPageable(int page, int size, Sort sort) {
-        return PageRequest.of(page, size, sort);
     }
 
     private PageResult<LocationModel> convertToPageModel(Page<LocationEntity> entityPage) {
