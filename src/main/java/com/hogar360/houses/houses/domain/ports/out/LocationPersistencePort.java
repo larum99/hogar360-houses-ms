@@ -5,6 +5,5 @@ import com.hogar360.houses.houses.domain.utils.PageResult;
 
 public interface LocationPersistencePort {
     LocationModel save(LocationModel locationModel);
-    LocationModel getById(Long id);
     PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection);
 }

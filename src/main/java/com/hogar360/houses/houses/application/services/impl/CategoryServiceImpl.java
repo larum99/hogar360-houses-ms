@@ -32,9 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public PagedCategoryResponse listCategories(ListCategoriesRequest request) {
         PageResult<CategoryModel> categoryPage = categoryServicePort.listCategories(request.page(), request.size(), request.orderAsc());
-        List<CategoryResponse> categoryResponses = categoryPage.getContent().stream()
-                .map(categoryDtoMapper::modelToResponse)
-                .toList();
+        List<CategoryResponse> categoryResponses = categoryDtoMapper.modelToResponseList(categoryPage.getContent());
 
         return new PagedCategoryResponse(
                 categoryResponses,

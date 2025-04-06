@@ -40,9 +40,7 @@ public class CategoryPersistenceAdapter implements CategoryPersistencePort {
         Page<CategoryEntity> entityPage =
                 categoryRepository.findAll(pageable);
 
-        List<CategoryModel> categoryModels = entityPage.getContent().stream()
-                .map(categoryEntityMapper::entityToModel)
-                .toList();
+        List<CategoryModel> categoryModels = categoryEntityMapper.entityToModelList(entityPage.getContent());
 
         return new PageResult<>(
                 categoryModels,

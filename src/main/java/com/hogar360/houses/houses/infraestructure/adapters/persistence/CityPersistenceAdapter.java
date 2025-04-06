@@ -22,7 +22,7 @@ public class CityPersistenceAdapter implements CityPersistencePort {
 
     @Override
     public CityModel getCityById(Long id) {
-        Optional<CityEntity> cityEntityOptional = cityRepository.findById(id);
-        return cityEntityOptional.map(cityEntityMapper::entityToModel).orElse(null);
+        CityEntity cityEntity = cityRepository.findById(id).orElse(null);
+        return cityEntityMapper.entityToModel(cityEntity);
     }
 }

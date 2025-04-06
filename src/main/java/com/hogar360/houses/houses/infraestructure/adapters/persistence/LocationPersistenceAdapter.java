@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -29,19 +31,12 @@ public class LocationPersistenceAdapter implements LocationPersistencePort {
     }
 
     @Override
-    public LocationModel getById(Long id) {
-        return locationRepository.findById(id)
-                .map(locationEntityMapper::entityToModel)
-                .orElse(null);
-    }
-
-    @Override
     public PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection) {
         Sort sort = createSort(sortBy, sortDirection);
         Pageable pageable = createPageable(page, size, sort);
 
         Page<LocationEntity> locationEntityPage =
-                locationRepository.findByCity_NameContainingIgnoreCaseOrCity_Department_NameContainingIgnoreCase(searchTerm, searchTerm, pageable);
+                locationRepository.searchByCityOrDepartment(searchTerm, pageable);
 
         return convertToPageModel(locationEntityPage);
     }
@@ -58,11 +53,11 @@ public class LocationPersistenceAdapter implements LocationPersistencePort {
         return PageRequest.of(page, size, sort);
     }
 
-    private PageResult<LocationModel> convertToPageModel(org.springframework.data.domain.Page<com.hogar360.houses.houses.infraestructure.entities.LocationEntity> entityPage) {
+    private PageResult<LocationModel> convertToPageModel(Page<LocationEntity> entityPage) {
+        List<LocationModel> locationModels = locationEntityMapper.entityToModelList(entityPage.getContent());
+
         return new PageResult<>(
-                entityPage.getContent().stream()
-                        .map(locationEntityMapper::entityToModel)
-                        .toList(),
+                locationModels,
                 entityPage.getTotalElements(),
                 entityPage.getTotalPages(),
                 entityPage.getNumber(),
