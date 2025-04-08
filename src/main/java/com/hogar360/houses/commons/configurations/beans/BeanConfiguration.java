@@ -12,11 +12,9 @@ import com.hogar360.houses.houses.infraestructure.adapters.persistence.CityPersi
 import com.hogar360.houses.houses.infraestructure.adapters.persistence.LocationPersistenceAdapter;
 import com.hogar360.houses.houses.infraestructure.mappers.CategoryEntityMapper;
 import com.hogar360.houses.houses.infraestructure.mappers.CityEntityMapper;
-import com.hogar360.houses.houses.infraestructure.mappers.DepartmentEntityMapper;
 import com.hogar360.houses.houses.infraestructure.mappers.LocationEntityMapper;
 import com.hogar360.houses.houses.infraestructure.repositories.mysql.CategoryRepository;
 import com.hogar360.houses.houses.infraestructure.repositories.mysql.CityRepository;
-import com.hogar360.houses.houses.infraestructure.repositories.mysql.DepartmentRepository;
 import com.hogar360.houses.houses.infraestructure.repositories.mysql.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +26,6 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfiguration {
     private final CategoryRepository categoryRepository;
     private final CategoryEntityMapper categoryEntityMapper;
-    private final DepartmentRepository departmentRepository;
-    private final DepartmentEntityMapper departmentEntityMapper;
     private final CityRepository cityRepository;
     private final CityEntityMapper cityEntityMapper;
     private final LocationRepository locationRepository;
