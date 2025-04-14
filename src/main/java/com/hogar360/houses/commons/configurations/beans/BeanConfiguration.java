@@ -1,21 +1,27 @@
 package com.hogar360.houses.commons.configurations.beans;
 
 import com.hogar360.houses.houses.domain.ports.in.CategoryServicePort;
+import com.hogar360.houses.houses.domain.ports.in.HouseServicePort;
 import com.hogar360.houses.houses.domain.ports.in.LocationServicePort;
 import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
+import com.hogar360.houses.houses.domain.ports.out.HousePersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
 import com.hogar360.houses.houses.domain.usecases.CategoryUseCase;
+import com.hogar360.houses.houses.domain.usecases.HouseUseCase;
 import com.hogar360.houses.houses.domain.usecases.LocationUseCase;
-import com.hogar360.houses.houses.infraestructure.adapters.persistence.CategoryPersistenceAdapter;
-import com.hogar360.houses.houses.infraestructure.adapters.persistence.CityPersistenceAdapter;
-import com.hogar360.houses.houses.infraestructure.adapters.persistence.LocationPersistenceAdapter;
-import com.hogar360.houses.houses.infraestructure.mappers.CategoryEntityMapper;
-import com.hogar360.houses.houses.infraestructure.mappers.CityEntityMapper;
-import com.hogar360.houses.houses.infraestructure.mappers.LocationEntityMapper;
-import com.hogar360.houses.houses.infraestructure.repositories.mysql.CategoryRepository;
-import com.hogar360.houses.houses.infraestructure.repositories.mysql.CityRepository;
-import com.hogar360.houses.houses.infraestructure.repositories.mysql.LocationRepository;
+import com.hogar360.houses.houses.infrastructure.adapters.persistence.CategoryPersistenceAdapter;
+import com.hogar360.houses.houses.infrastructure.adapters.persistence.CityPersistenceAdapter;
+import com.hogar360.houses.houses.infrastructure.adapters.persistence.HousePersistenceAdapter;
+import com.hogar360.houses.houses.infrastructure.adapters.persistence.LocationPersistenceAdapter;
+import com.hogar360.houses.houses.infrastructure.mappers.CategoryEntityMapper;
+import com.hogar360.houses.houses.infrastructure.mappers.CityEntityMapper;
+import com.hogar360.houses.houses.infrastructure.mappers.HouseEntityMapper;
+import com.hogar360.houses.houses.infrastructure.mappers.LocationEntityMapper;
+import com.hogar360.houses.houses.infrastructure.repositories.mysql.CategoryRepository;
+import com.hogar360.houses.houses.infrastructure.repositories.mysql.CityRepository;
+import com.hogar360.houses.houses.infrastructure.repositories.mysql.HouseRepository;
+import com.hogar360.houses.houses.infrastructure.repositories.mysql.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +36,8 @@ public class BeanConfiguration {
     private final CityEntityMapper cityEntityMapper;
     private final LocationRepository locationRepository;
     private final LocationEntityMapper locationEntityMapper;
+    private final HouseRepository houseRepository;
+    private final HouseEntityMapper houseEntityMapper;
 
     @Bean
     public CategoryServicePort categoryServicePort() {
@@ -54,4 +62,17 @@ public class BeanConfiguration {
     public CityPersistencePort cityPersistencePort() {
         return new CityPersistenceAdapter(cityRepository, cityEntityMapper);
     }
+
+
+    @Bean
+    public HouseServicePort houseServicePort() {
+        return new HouseUseCase(housePersistencePort(), categoryPersistencePort(),
+                locationPersistencePort());
+    }
+
+    @Bean
+    public HousePersistencePort housePersistencePort() {
+        return new HousePersistenceAdapter(houseRepository, houseEntityMapper);
+    }
+
 }

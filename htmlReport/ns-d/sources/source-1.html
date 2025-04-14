@@ -19,10 +19,11 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.hogar360.houses.houses.infraestructure.adapters.persistence</a>
+    <a href="../index.html">com.hogar360.houses.houses.infrastructure.adapters.persistence</a>
 </div>
 
-<h1>Coverage Summary for Class: CategoryPersistenceAdapter (com.hogar360.houses.houses.infraestructure.adapters.persistence)</h1>
+<h1>Coverage Summary for Class: CategoryPersistenceAdapter
+    (com.hogar360.houses.houses.infrastructure.adapters.persistence)</h1>
 
 <table class="coverageStats">
 <tr>
@@ -87,13 +88,13 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<code class="sourceCode" id="sourceCode">&nbsp;package com.hogar360.houses.houses.infraestructure.adapters.persistence;
+<code class="sourceCode" id="sourceCode">&nbsp;package com.hogar360.houses.houses.infrastructure.adapters.persistence;
 &nbsp;
 &nbsp;import com.hogar360.houses.houses.domain.model.CategoryModel;
 &nbsp;import com.hogar360.houses.houses.domain.utils.PageResult;
 &nbsp;import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
-&nbsp;import com.hogar360.houses.houses.infraestructure.mappers.CategoryEntityMapper;
-&nbsp;import com.hogar360.houses.houses.infraestructure.repositories.mysql.CategoryRepository;
+&nbsp;import com.hogar360.houses.houses.infrastructure.mappers.CategoryEntityMapper;
+&nbsp;import com.hogar360.houses.houses.infrastructure.repositories.mysql.CategoryRepository;
 &nbsp;import lombok.RequiredArgsConstructor;
 &nbsp;import org.springframework.data.domain.PageRequest;
 &nbsp;import org.springframework.data.domain.Pageable;
@@ -124,7 +125,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 &nbsp;    public PageModel&lt;CategoryModel&gt; listCategories(int page, int size, boolean orderAsc) {
 <b class="nc">&nbsp;        Sort sort = orderAsc ? Sort.by(&quot;name&quot;).ascending() : Sort.by(&quot;name&quot;).descending();</b>
 <b class="nc">&nbsp;        Pageable pageable = PageRequest.of(page, size, sort);</b>
-<b class="nc">&nbsp;        org.springframework.data.domain.Page&lt;com.hogar360.houses.houses.infraestructure.entities.CategoryEntity&gt; entityPage =</b>
+<b class="nc">&nbsp;        org.springframework.data.domain.Page&lt;com.hogar360.houses.houses.infrastructure.entities.CategoryEntity&gt; entityPage =</b>
 <b class="nc">&nbsp;                categoryRepository.findAll(pageable);</b>
 &nbsp;
 <b class="nc">&nbsp;        List&lt;CategoryModel&gt; categoryModels = entityPage.getContent().stream()</b>
