@@ -1,7 +1,5 @@
 package com.hogar360.houses.houses.domain.model;
 
-import java.util.Objects;
-
 public class LocationModel {
     private Long id;
     private CityModel city;

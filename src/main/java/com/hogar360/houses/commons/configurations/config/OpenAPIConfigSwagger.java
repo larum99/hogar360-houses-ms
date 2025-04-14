@@ -14,17 +14,24 @@ public class OpenAPIConfigSwagger {
     @Bean
     public GroupedOpenApi categoryApi() {
         return GroupedOpenApi.builder().group("category")
-                .packagesToScan("com.hogar360.houses.houses.infraestructure.endpoints.rest") // Escanea el paquete de CategoryController
+                .packagesToScan("com.hogar360.houses.houses.infrastructure.endpoints.rest")
                 .build();
     }
 
     @Bean
     public GroupedOpenApi locationApi() {
         return GroupedOpenApi.builder().group("location")
-                .packagesToScan("com.hogar360.houses.houses.infraestructure.endpoints.rest") // Escanea el paquete de LocationController
+                .packagesToScan(ControllerConstants.REST_ENDPOINT_PACKAGE)
                 .build();
     }
-    
+
+    @Bean
+    public GroupedOpenApi houseApi() {
+        return GroupedOpenApi.builder().group("house")
+                .packagesToScan(ControllerConstants.REST_ENDPOINT_PACKAGE)
+                .build();
+    }
+
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()

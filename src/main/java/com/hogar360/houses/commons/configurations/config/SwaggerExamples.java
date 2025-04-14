@@ -111,6 +111,35 @@ public class SwaggerExamples {
         }
     """;
 
+    public static final String SAVE_HOUSE_REQUEST = """
+    {
+      "name": "Casa Narnia",
+      "description": "Hermosa casa de ensueño frente a las montañas con excelente vista",
+      "categoryId": 1,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "price": 350000.00,
+      "locationId": 1,
+      "activePublicationDate": "2025-04-13"
+    }
+""";
+
+    public static final String HOUSE_CREATED_RESPONSE = """
+    {
+      "message": "House created successfully.",
+      "houseId": 42,
+      "createdAt": "2025-04-13T10:15:30.000"
+    }
+""";
+
+    public static final String CATEGORY_OR_LOCATION_NOT_FOUND = """
+    {
+      "message": "Category or Location not found",
+      "timeStamp": "2025-04-12T15:23:01.123456"
+    }
+""";
+
+
     // query parameters
 
     public static final String PAGE_DESCRIPTION = "Número de página a mostrar (comienza en 0)";
