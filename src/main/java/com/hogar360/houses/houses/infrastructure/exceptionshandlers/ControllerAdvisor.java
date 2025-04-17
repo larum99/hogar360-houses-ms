@@ -93,4 +93,15 @@ public class ControllerAdvisor {
                 LocalDateTime.now()));
     }
 
+    @ExceptionHandler(InvalidSortByFieldException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidSortByFieldException(InvalidSortByFieldException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.INVALID_SORT_BY_FIELD_EXCEPTION,
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(InvalidSortDirectionException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidSortDirectionException(InvalidSortDirectionException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.INVALID_SORT_DIRECTION_EXCEPTION,
+                LocalDateTime.now()));
+    }
 }

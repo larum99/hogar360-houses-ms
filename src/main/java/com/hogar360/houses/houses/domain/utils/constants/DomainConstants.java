@@ -21,10 +21,20 @@ public class DomainConstants {
     public static final int MAX_CATEGORY_DESCRIPTION_LENGTH = 90;
 
     public static final int DEFAULT_PAGE_NUMBER = 0;
-    public static final int DEFAULT_SIZE_NUMBER = 10;
+    public static final int DEFAULT_SIZE_NUMBER = 1;
 
     public static final int MIN_BEDROOMS = 1;
     public static final int MIN_BATHROOMS = 1;
     public static final BigDecimal MIN_PRICE = BigDecimal.ZERO;
     public static final int MAX_PUBLICATION_DAYS = 30;
+
+    public static final String SORT_DIRECTION_ASC = "asc";
+    public static final String SORT_DIRECTION_DESC = "desc";
+
+    public static final String SORT_BY_PRICE = "price";
+    public static final String SORT_BY_BEDROOMS = "bedrooms";
+    public static final String SORT_BY_BATHROOMS = "bathrooms";
+    public static final String SORT_BY_PUBLICATION_DATE = "publicationDate";
+    public static final String SORT_BY_CATEGORY = "category";
+
 }
