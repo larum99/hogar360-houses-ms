@@ -139,6 +139,32 @@ public class SwaggerExamples {
     }
 """;
 
+    public static final String PAGED_HOUSES_RESPONSE = """
+        {
+          "content": [
+            {
+              "id": 1,
+              "name": "Casa Narnia",
+              "description": "Hermosa casa frente a las montañas",
+              "price": 350000.00,
+              "location": {
+                "city": "Bogotá",
+                "department": "Cundinamarca"
+              },
+              "category": "Casa",
+              "bedrooms": 3,
+              "bathrooms": 2
+            }
+          ],
+          "totalElements": 1,
+          "totalPages": 1,
+          "currentPage": 0,
+          "pageSize": 10,
+          "isFirst": true,
+          "isLast": true
+        }
+    """;
+
 
     // query parameters
 
@@ -159,4 +185,25 @@ public class SwaggerExamples {
 
     public static final String SEARCH_TERM_DESCRIPTION = "Término de búsqueda por ciudad o departamento";
     public static final String SEARCH_TERM_EXAMPLE = "Bogotá";
+
+    public static final String HOUSE_DEPARTMENT_DESCRIPTION = "Nombre del departamento donde se encuentra la propiedad";
+    public static final String HOUSE_DEPARTMENT_EXAMPLE = "Valle";
+
+    public static final String HOUSE_CITY_DESCRIPTION = "Nombre de la ciudad donde se encuentra la propiedad";
+    public static final String HOUSE_CITY_EXAMPLE = "Cali";
+
+    public static final String HOUSE_SECTOR_DESCRIPTION = "Sector o barrio de la propiedad";
+    public static final String HOUSE_SECTOR_EXAMPLE = "Norte";
+
+    public static final String HOUSE_CATEGORY_DESCRIPTION = "Categoría de la propiedad (ej. Casa, Apartamento)";
+    public static final String HOUSE_CATEGORY_EXAMPLE = "Casa";
+
+    public static final String HOUSE_BEDROOMS_DESCRIPTION = "Número de dormitorios de la propiedad";
+    public static final String HOUSE_BEDROOMS_EXAMPLE = "3";
+
+    public static final String HOUSE_BATHROOMS_DESCRIPTION = "Número de baños de la propiedad";
+    public static final String HOUSE_BATHROOMS_EXAMPLE = "2";
+
+    public static final String HOUSE_PRICE_DESCRIPTION = "Precio exacto de la propiedad";
+    public static final String HOUSE_PRICE_EXAMPLE = "250000.00";
 }

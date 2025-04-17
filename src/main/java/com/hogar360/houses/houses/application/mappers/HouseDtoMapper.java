@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface HouseDtoMapper {
 
@@ -20,4 +22,5 @@ public interface HouseDtoMapper {
     @Mapping(source = "location.city.department.name", target = "location.departmentName")
     HouseResponse modelToResponse(HouseModel houseModel);
 
+    List<HouseResponse> modelToResponseList(List<HouseModel> houseModels);
 }

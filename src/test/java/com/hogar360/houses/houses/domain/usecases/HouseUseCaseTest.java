@@ -7,10 +7,14 @@ import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
 import com.hogar360.houses.houses.domain.utils.PublicationStatus;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
+import com.hogar360.houses.houses.domain.criteria.HouseSearchCriteria;
+import com.hogar360.houses.houses.domain.utils.PageResult;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -227,5 +231,83 @@ class HouseUseCaseTest {
         assertEquals("Beautiful Apartment", savedHouse.getName());
         assertEquals(PublicationStatus.PUBLISHED, savedHouse.getStatus());
         assertEquals(LocalDate.now(), savedHouse.getPublicationDate());
+    }
+
+    @Test
+    void searchHouses_negativePageNumber_throwsPageNumberNegativeException() {
+        HouseSearchCriteria criteria = new HouseSearchCriteria();
+        criteria.setPage(DomainConstants.DEFAULT_PAGE_NUMBER - 1);
+        assertThrows(PageNumberNegativeException.class, () -> houseUseCase.searchHouses(criteria));
+        verifyNoInteractions(housePersistencePort);
+    }
+
+    @Test
+    void searchHouses_invalidPageSize_throwsPageSizeInvalidException() {
+        HouseSearchCriteria criteria = new HouseSearchCriteria();
+        criteria.setSize(DomainConstants.DEFAULT_SIZE_NUMBER);
+        assertThrows(PageSizeInvalidException.class, () -> houseUseCase.searchHouses(criteria));
+        criteria.setSize(DomainConstants.DEFAULT_SIZE_NUMBER - 1);
+        assertThrows(PageSizeInvalidException.class, () -> houseUseCase.searchHouses(criteria));
+        verifyNoInteractions(housePersistencePort);
+    }
+
+    @Test
+    void searchHouses_minimumBedroomsNotMet_throwsMinimumBedroomsException() {
+        HouseSearchCriteria criteria = new HouseSearchCriteria();
+        criteria.setSize(DomainConstants.DEFAULT_SIZE_NUMBER + 1);
+        criteria.setBedrooms(DomainConstants.MIN_BEDROOMS - 1);
+        assertThrows(HouseMinimumBedroomsRequiredException.class, () -> houseUseCase.searchHouses(criteria));
+        verifyNoInteractions(housePersistencePort);
+    }
+
+    @Test
+    void searchHouses_minimumBathroomsNotMet_throwsMinimumBathroomsException() {
+        HouseSearchCriteria criteria = new HouseSearchCriteria();
+        criteria.setSize(DomainConstants.DEFAULT_SIZE_NUMBER + 1);
+        criteria.setBathrooms(DomainConstants.MIN_BATHROOMS - 1);
+        assertThrows(HouseMinimumBathroomsRequiredException.class, () -> houseUseCase.searchHouses(criteria));
+        verifyNoInteractions(housePersistencePort);
+    }
+
+    @Test
+    void searchHouses_minimumPriceNotMet_throwsMinimumPriceException() {
+        HouseSearchCriteria criteria = new HouseSearchCriteria();
+        criteria.setSize(DomainConstants.DEFAULT_SIZE_NUMBER + 1);
+        criteria.setMinPrice(DomainConstants.MIN_PRICE);
+        assertThrows(HouseMinimumRequirePriceException.class, () -> houseUseCase.searchHouses(criteria));
+        criteria.setMinPrice(DomainConstants.MIN_PRICE.subtract(BigDecimal.ONE));
+        assertThrows(HouseMinimumRequirePriceException.class, () -> houseUseCase.searchHouses(criteria));
+        verifyNoInteractions(housePersistencePort);
+    }
+
+    @Test
+    void searchHouses_invalidSortDirection_throwsInvalidSortDirectionException() {
+        HouseSearchCriteria criteria = new HouseSearchCriteria();
+        criteria.setSize(DomainConstants.DEFAULT_SIZE_NUMBER + 1);
+        criteria.setSortDirection("invalid");
+        assertThrows(InvalidSortDirectionException.class, () -> houseUseCase.searchHouses(criteria));
+        criteria.setSortDirection("ascc");
+        assertThrows(InvalidSortDirectionException.class, () -> houseUseCase.searchHouses(criteria));
+        verifyNoInteractions(housePersistencePort);
+    }
+
+    @Test
+    void searchHouses_invalidSortByField_throwsInvalidSortByFieldException() {
+        HouseSearchCriteria criteria = new HouseSearchCriteria();
+        criteria.setSize(DomainConstants.DEFAULT_SIZE_NUMBER + 1);
+        criteria.setSortBy("invalidField");
+        assertThrows(InvalidSortByFieldException.class, () -> houseUseCase.searchHouses(criteria));
+        criteria.setSortBy("name");
+        assertThrows(InvalidSortByFieldException.class, () -> houseUseCase.searchHouses(criteria));
+        verifyNoInteractions(housePersistencePort);
+    }
+
+    @Test
+    void searchHouses_validCriteria_callsPersistencePort() {
+        HouseSearchCriteria criteria = new HouseSearchCriteria();
+        criteria.setPage(1);
+        criteria.setSize(10);
+        when(housePersistencePort.search(ArgumentMatchers.any(HouseSearchCriteria.class))).thenReturn(new PageResult<>(Collections.emptyList(), 0L, 1, 10, 1, true, true));        houseUseCase.searchHouses(criteria);
+        verify(housePersistencePort, times(1)).search(criteria);
     }
 }
