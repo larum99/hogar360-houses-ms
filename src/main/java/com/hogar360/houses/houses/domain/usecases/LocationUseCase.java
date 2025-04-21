@@ -1,28 +1,29 @@
 package com.hogar360.houses.houses.domain.usecases;
 
-import com.hogar360.houses.houses.domain.exceptions.CityNotFoundException;
-import com.hogar360.houses.houses.domain.exceptions.LocationSectorMaxSizeExceededException;
-import com.hogar360.houses.houses.domain.exceptions.PageNumberNegativeException;
-import com.hogar360.houses.houses.domain.exceptions.PageSizeInvalidException;
+import com.hogar360.houses.houses.domain.exceptions.*;
 import com.hogar360.houses.houses.domain.model.CityModel;
 import com.hogar360.houses.houses.domain.model.LocationModel;
 import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.in.LocationServicePort;
 import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
+import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;  // Agregar esta importación
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 
 public class LocationUseCase implements LocationServicePort {
     private final CityPersistencePort cityPersistencePort;
     private final LocationPersistencePort locationPersistencePort;
+    private final RoleValidatorPort roleValidatorPort;
 
-    public LocationUseCase(CityPersistencePort cityPersistencePort, LocationPersistencePort locationPersistencePort) {
+    public LocationUseCase(CityPersistencePort cityPersistencePort, LocationPersistencePort locationPersistencePort, RoleValidatorPort roleValidatorPort) {
         this.cityPersistencePort = cityPersistencePort;
         this.locationPersistencePort = locationPersistencePort;
+        this.roleValidatorPort = roleValidatorPort;
     }
 
     @Override
-    public LocationModel createLocation(Long cityId, String sector) {
+    public LocationModel createLocation(Long cityId, String sector, String token) {
+        validateRole(token);
         CityModel city = validateAndGetCity(cityId);
         validateSectorLength(sector);
 
@@ -36,6 +37,13 @@ public class LocationUseCase implements LocationServicePort {
         validatePageNumber(page);
         validatePageSize(size);
         return locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection);
+    }
+
+    private void validateRole(String token) {
+        String role = roleValidatorPort.extractRole(token);
+        if (!DomainConstants.ROLE_ADMIN.equals(role)) {
+            throw new ForbiddenException();
+        }
     }
 
     private CityModel validateAndGetCity(Long cityId) {

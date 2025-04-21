@@ -37,4 +37,8 @@ public class DomainConstants {
     public static final String SORT_BY_PUBLICATION_DATE = "publicationDate";
     public static final String SORT_BY_CATEGORY = "category";
 
+    public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_SELLER = "VENDEDOR";
+
+
 }

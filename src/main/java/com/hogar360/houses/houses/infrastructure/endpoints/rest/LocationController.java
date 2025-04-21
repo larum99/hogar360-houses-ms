@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -96,8 +97,14 @@ public class LocationController {
                     )
             }
     )
-    public ResponseEntity<SaveLocationResponse> save(@RequestBody SaveLocationRequest saveLocationRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(locationService.save(saveLocationRequest));
+    public ResponseEntity<SaveLocationResponse> save(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @org.springframework.web.bind.annotation.RequestBody SaveLocationRequest saveLocationRequest) {
+
+        String token = authorizationHeader.replace("Bearer ", ""); // Extraemos el token limpio
+        SaveLocationResponse response = locationService.save(saveLocationRequest, token); // Pasamos el token al servicio
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/search")

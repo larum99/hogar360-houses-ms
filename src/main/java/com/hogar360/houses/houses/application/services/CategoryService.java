@@ -6,6 +6,6 @@ import com.hogar360.houses.houses.application.dto.response.PagedCategoryResponse
 import com.hogar360.houses.houses.application.dto.response.SaveCategoryResponse;
 
 public interface CategoryService {
-    SaveCategoryResponse save(SaveCategoryRequest request);
+    SaveCategoryResponse save(SaveCategoryRequest request, String token);
     PagedCategoryResponse listCategories(ListCategoriesRequest request);
 }

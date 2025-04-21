@@ -1,6 +1,7 @@
 package com.hogar360.houses.houses.infrastructure.exceptionshandlers;
 
 import com.hogar360.houses.houses.domain.exceptions.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -103,5 +104,13 @@ public class ControllerAdvisor {
     public ResponseEntity<ExceptionResponse> handleInvalidSortDirectionException(InvalidSortDirectionException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.INVALID_SORT_DIRECTION_EXCEPTION,
                 LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ExceptionResponse> handleForbidden(ForbiddenException exception) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionResponse(
+                ExceptionConstants.FORBIDDEN_MESSAGE,
+                LocalDateTime.now()
+        ));
     }
 }
