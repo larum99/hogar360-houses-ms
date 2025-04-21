@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -90,8 +91,11 @@ public class CategoryController {
                     )
             }
     )
-    public ResponseEntity<SaveCategoryResponse> save(@RequestBody SaveCategoryRequest saveCategoryRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(saveCategoryRequest));
+    public ResponseEntity<SaveCategoryResponse> save(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+                                                     @org.springframework.web.bind.annotation.RequestBody SaveCategoryRequest saveCategoryRequest) {
+        String token = authorizationHeader.replace("Bearer ", ""); // extraemos el token limpio
+        SaveCategoryResponse response = categoryService.save(saveCategoryRequest, token);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/")

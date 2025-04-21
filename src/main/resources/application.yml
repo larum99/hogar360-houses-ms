@@ -23,3 +23,8 @@ springdoc:
     enabled: true
 
 
+security:
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    expiration-millis: ${JWT_EXPIRATION_MILLIS:180000}
+

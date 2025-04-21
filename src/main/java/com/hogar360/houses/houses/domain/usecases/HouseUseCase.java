@@ -6,6 +6,7 @@ import com.hogar360.houses.houses.domain.model.HouseModel;
 import com.hogar360.houses.houses.domain.model.CategoryModel;
 import com.hogar360.houses.houses.domain.model.LocationModel;
 import com.hogar360.houses.houses.domain.ports.in.HouseServicePort;
+import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import com.hogar360.houses.houses.domain.ports.out.HousePersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
@@ -24,17 +25,20 @@ public class HouseUseCase implements HouseServicePort {
     private final HousePersistencePort housePersistencePort;
     private final CategoryPersistencePort categoryPersistencePort;
     private final LocationPersistencePort locationPersistencePort;
+    private final RoleValidatorPort roleValidatorPort;
 
     public HouseUseCase(HousePersistencePort housePersistencePort,
                         CategoryPersistencePort categoryPersistencePort,
-                        LocationPersistencePort locationPersistencePort) {
+                        LocationPersistencePort locationPersistencePort, RoleValidatorPort roleValidatorPort) {
         this.housePersistencePort = housePersistencePort;
         this.categoryPersistencePort = categoryPersistencePort;
         this.locationPersistencePort = locationPersistencePort;
+        this.roleValidatorPort = roleValidatorPort;
     }
 
     @Override
-    public void save(HouseModel houseModel) {
+    public void save(HouseModel houseModel, String token) {
+        validateRole(token);
         validateRequiredFields(houseModel);
         validateCategoryExists(houseModel.getCategory());
         validateLocationExists(houseModel.getLocation());
@@ -54,6 +58,13 @@ public class HouseUseCase implements HouseServicePort {
         validatePageSize(criteria.getSize());
         validateSearchCriteria(criteria);
         return housePersistencePort.search(criteria);
+    }
+
+    private void validateRole(String token) {
+        String role = roleValidatorPort.extractRole(token);
+        if (!DomainConstants.ROLE_SELLER.equals(role)) {
+            throw new ForbiddenException();
+        }
     }
 
     private void validateRequiredFields(HouseModel houseModel) {

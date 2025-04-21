@@ -22,6 +22,7 @@ import com.hogar360.houses.houses.infrastructure.repositories.mysql.CategoryRepo
 import com.hogar360.houses.houses.infrastructure.repositories.mysql.CityRepository;
 import com.hogar360.houses.houses.infrastructure.repositories.mysql.HouseRepository;
 import com.hogar360.houses.houses.infrastructure.repositories.mysql.LocationRepository;
+import com.hogar360.houses.houses.infrastructure.security.JwtRoleValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,10 +39,11 @@ public class BeanConfiguration {
     private final LocationEntityMapper locationEntityMapper;
     private final HouseRepository houseRepository;
     private final HouseEntityMapper houseEntityMapper;
+    private final JwtRoleValidator jwtRoleValidator;
 
     @Bean
     public CategoryServicePort categoryServicePort() {
-        return new CategoryUseCase(categoryPersistencePort());
+        return new CategoryUseCase(categoryPersistencePort(), jwtRoleValidator);
     }
 
     @Bean
@@ -50,7 +52,7 @@ public class BeanConfiguration {
     }
     @Bean
     public LocationServicePort locationServicePort() {
-        return new LocationUseCase(cityPersistencePort(), locationPersistencePort());
+        return new LocationUseCase(cityPersistencePort(), locationPersistencePort(), jwtRoleValidator);
     }
 
     @Bean
@@ -67,7 +69,7 @@ public class BeanConfiguration {
     @Bean
     public HouseServicePort houseServicePort() {
         return new HouseUseCase(housePersistencePort(), categoryPersistencePort(),
-                locationPersistencePort());
+                locationPersistencePort(), jwtRoleValidator);
     }
 
     @Bean

@@ -5,6 +5,6 @@ import com.hogar360.houses.houses.application.dto.response.PagedLocationResponse
 import com.hogar360.houses.houses.application.dto.response.SaveLocationResponse;
 
 public interface LocationService {
-    SaveLocationResponse save(SaveLocationRequest request);
+    SaveLocationResponse save(SaveLocationRequest request, String token);
     PagedLocationResponse searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection);
 }

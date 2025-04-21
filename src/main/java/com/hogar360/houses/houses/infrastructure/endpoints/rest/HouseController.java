@@ -12,6 +12,7 @@ import com.hogar360.houses.houses.application.services.HouseService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,13 @@ public class HouseController {
 
     @SaveHouseDoc
     @PostMapping(ControllerConstants.SAVE_PATH)
-    public ResponseEntity<SaveHouseResponse> save(@RequestBody SaveHouseRequest saveHouseRequest) {
-        SaveHouseResponse response = houseService.save(saveHouseRequest);
+    public ResponseEntity<SaveHouseResponse> save(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @RequestBody SaveHouseRequest saveHouseRequest) {
+
+        String token = authorizationHeader.replace("Bearer ", "");
+        SaveHouseResponse response = houseService.save(saveHouseRequest, token);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

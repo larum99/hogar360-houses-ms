@@ -27,12 +27,8 @@ public class HouseServiceImpl implements HouseService {
     private final HouseSearchCriteriaMapper houseSearchCriteriaMapper;
 
     @Override
-    public SaveHouseResponse save(SaveHouseRequest request) {
-
-        HouseModel houseModel = houseDtoMapper.requestToModel(request);
-
-        houseServicePort.save(houseModel);
-
+    public SaveHouseResponse save(SaveHouseRequest request, String token) {
+        houseServicePort.save(houseDtoMapper.requestToModel(request), token);
         return new SaveHouseResponse(Constants.SAVE_HOUSE_RESPONSE_MESSAGE, LocalDateTime.now());
     }
 

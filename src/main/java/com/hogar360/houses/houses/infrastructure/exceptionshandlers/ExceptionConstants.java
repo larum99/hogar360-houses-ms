@@ -23,4 +23,6 @@ public class ExceptionConstants {
 
     public static final String INVALID_SORT_BY_FIELD_EXCEPTION = "The sorting field is invalid";
     public static final String INVALID_SORT_DIRECTION_EXCEPTION = "The sorting direction is invalid";
+
+    public static final String FORBIDDEN_MESSAGE = "Access denied: insufficient permissions.";
 }

@@ -5,6 +5,6 @@
     import com.hogar360.houses.houses.domain.utils.PageResult;
 
     public interface HouseServicePort {
-        void save(HouseModel houseModel);
+        void save(HouseModel houseModel, String token);
         PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria);
     }

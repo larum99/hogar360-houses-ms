@@ -6,6 +6,6 @@ import com.hogar360.houses.houses.application.dto.response.PagedHouseResponse;
 import com.hogar360.houses.houses.application.dto.response.SaveHouseResponse;
 
 public interface HouseService {
-    SaveHouseResponse save(SaveHouseRequest request);
+    SaveHouseResponse save(SaveHouseRequest request, String token);
     PagedHouseResponse listHouses(ListHousesRequest request);
 }

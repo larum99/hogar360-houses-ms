@@ -2,24 +2,27 @@ package com.hogar360.houses.houses.domain.usecases;
 
 import com.hogar360.houses.houses.domain.exceptions.*;
 import com.hogar360.houses.houses.domain.model.CategoryModel;
-import com.hogar360.houses.houses.domain.utils.PageResult;
+import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import com.hogar360.houses.houses.domain.ports.in.CategoryServicePort;
 import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
+import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 
 import java.util.Objects;
 
 public class CategoryUseCase implements CategoryServicePort {
     private final CategoryPersistencePort categoryPersistencePort;
+    private final RoleValidatorPort roleValidatorPort;
 
-    public CategoryUseCase(CategoryPersistencePort categoryPersistencePort) {
+    public CategoryUseCase(CategoryPersistencePort categoryPersistencePort, RoleValidatorPort roleValidatorPort) {
         this.categoryPersistencePort = categoryPersistencePort;
+        this.roleValidatorPort = roleValidatorPort;
     }
 
     @Override
-    public void save(CategoryModel categoryModel) {
-        validateCategoryName(categoryModel.getName());
-        validateCategoryDescription(categoryModel.getDescription());
+    public void save(CategoryModel categoryModel, String token) {
+        validateRole(token);
+        validateMandatoryFields(categoryModel);
         checkIfCategoryAlreadyExists(categoryModel.getName());
         categoryPersistencePort.save(categoryModel);
     }
@@ -29,6 +32,18 @@ public class CategoryUseCase implements CategoryServicePort {
         validatePageNumber(page);
         validatePageSize(size);
         return categoryPersistencePort.listCategories(page, size, orderAsc);
+    }
+
+    private void validateRole(String token) {
+        String role = roleValidatorPort.extractRole(token);
+        if (!DomainConstants.ROLE_ADMIN.equals(role)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void validateMandatoryFields(CategoryModel categoryModel) {
+        validateCategoryName(categoryModel.getName());
+        validateCategoryDescription(categoryModel.getDescription());
     }
 
     private void validateCategoryName(String name) {

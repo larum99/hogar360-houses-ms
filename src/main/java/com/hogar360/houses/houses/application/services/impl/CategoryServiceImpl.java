@@ -24,8 +24,8 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryDtoMapper categoryDtoMapper;
 
     @Override
-    public SaveCategoryResponse save(SaveCategoryRequest request) {
-        categoryServicePort.save(categoryDtoMapper.requestToModel(request));
+    public SaveCategoryResponse save(SaveCategoryRequest request, String token) {
+        categoryServicePort.save(categoryDtoMapper.requestToModel(request), token);
         return new SaveCategoryResponse(Constants.SAVE_CATEGORY_RESPONSE_MESSAGE, LocalDateTime.now());
     }
 
