@@ -2,7 +2,6 @@ package com.hogar360.houses.houses.domain.usecases;
 
 import com.hogar360.houses.houses.domain.exceptions.*;
 import com.hogar360.houses.houses.domain.model.CategoryModel;
-import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import com.hogar360.houses.houses.domain.ports.in.CategoryServicePort;
 import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
 import com.hogar360.houses.houses.domain.utils.PageResult;
@@ -12,16 +11,14 @@ import java.util.Objects;
 
 public class CategoryUseCase implements CategoryServicePort {
     private final CategoryPersistencePort categoryPersistencePort;
-    private final RoleValidatorPort roleValidatorPort;
 
-    public CategoryUseCase(CategoryPersistencePort categoryPersistencePort, RoleValidatorPort roleValidatorPort) {
+    public CategoryUseCase(CategoryPersistencePort categoryPersistencePort) {
         this.categoryPersistencePort = categoryPersistencePort;
-        this.roleValidatorPort = roleValidatorPort;
     }
 
     @Override
-    public void save(CategoryModel categoryModel, String token) {
-        validateRole(token);
+    public void save(CategoryModel categoryModel, String role) {
+        validateRole(role);
         validateMandatoryFields(categoryModel);
         checkIfCategoryAlreadyExists(categoryModel.getName());
         categoryPersistencePort.save(categoryModel);
@@ -34,8 +31,7 @@ public class CategoryUseCase implements CategoryServicePort {
         return categoryPersistencePort.listCategories(page, size, orderAsc);
     }
 
-    private void validateRole(String token) {
-        String role = roleValidatorPort.extractRole(token);
+    private void validateRole(String role) {
         if (!DomainConstants.ROLE_ADMIN.equals(role)) {
             throw new ForbiddenException();
         }

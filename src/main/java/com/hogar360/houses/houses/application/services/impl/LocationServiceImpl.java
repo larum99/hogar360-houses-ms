@@ -8,6 +8,7 @@ import com.hogar360.houses.houses.application.dto.response.SaveLocationResponse;
 import com.hogar360.houses.houses.application.mappers.LocationDtoMapper;
 import com.hogar360.houses.houses.application.services.LocationService;
 import com.hogar360.houses.houses.domain.model.LocationModel;
+import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.in.LocationServicePort;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,12 @@ import java.util.List;
 public class LocationServiceImpl implements LocationService {
     private final LocationServicePort locationServicePort;
     private final LocationDtoMapper locationDtoMapper;
+    private final RoleValidatorPort roleValidatorPort;
 
     @Override
     public SaveLocationResponse save(SaveLocationRequest request, String token) {
-        locationServicePort.createLocation(request.cityId(), request.sector(), token);
+        String role = roleValidatorPort.extractRole(token);
+        locationServicePort.createLocation(request.cityId(), request.sector(), role);
         return new SaveLocationResponse(Constants.SAVE_LOCATION_RESPONSE_MESSAGE, LocalDateTime.now());
     }
 

@@ -39,11 +39,10 @@ public class BeanConfiguration {
     private final LocationEntityMapper locationEntityMapper;
     private final HouseRepository houseRepository;
     private final HouseEntityMapper houseEntityMapper;
-    private final JwtRoleValidator jwtRoleValidator;
 
     @Bean
     public CategoryServicePort categoryServicePort() {
-        return new CategoryUseCase(categoryPersistencePort(), jwtRoleValidator);
+        return new CategoryUseCase(categoryPersistencePort());
     }
 
     @Bean
@@ -52,7 +51,7 @@ public class BeanConfiguration {
     }
     @Bean
     public LocationServicePort locationServicePort() {
-        return new LocationUseCase(cityPersistencePort(), locationPersistencePort(), jwtRoleValidator);
+        return new LocationUseCase(cityPersistencePort(), locationPersistencePort());
     }
 
     @Bean
@@ -69,7 +68,7 @@ public class BeanConfiguration {
     @Bean
     public HouseServicePort houseServicePort() {
         return new HouseUseCase(housePersistencePort(), categoryPersistencePort(),
-                locationPersistencePort(), jwtRoleValidator);
+                locationPersistencePort());
     }
 
     @Bean

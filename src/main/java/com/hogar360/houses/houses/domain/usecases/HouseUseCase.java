@@ -25,20 +25,18 @@ public class HouseUseCase implements HouseServicePort {
     private final HousePersistencePort housePersistencePort;
     private final CategoryPersistencePort categoryPersistencePort;
     private final LocationPersistencePort locationPersistencePort;
-    private final RoleValidatorPort roleValidatorPort;
 
     public HouseUseCase(HousePersistencePort housePersistencePort,
                         CategoryPersistencePort categoryPersistencePort,
-                        LocationPersistencePort locationPersistencePort, RoleValidatorPort roleValidatorPort) {
+                        LocationPersistencePort locationPersistencePort) {
         this.housePersistencePort = housePersistencePort;
         this.categoryPersistencePort = categoryPersistencePort;
         this.locationPersistencePort = locationPersistencePort;
-        this.roleValidatorPort = roleValidatorPort;
     }
 
     @Override
-    public void save(HouseModel houseModel, String token) {
-        validateRole(token);
+    public void save(HouseModel houseModel, String role) {
+        validateRole(role);
         validateRequiredFields(houseModel);
         validateCategoryExists(houseModel.getCategory());
         validateLocationExists(houseModel.getLocation());
@@ -60,8 +58,7 @@ public class HouseUseCase implements HouseServicePort {
         return housePersistencePort.search(criteria);
     }
 
-    private void validateRole(String token) {
-        String role = roleValidatorPort.extractRole(token);
+    private void validateRole(String role) {
         if (!DomainConstants.ROLE_SELLER.equals(role)) {
             throw new ForbiddenException();
         }

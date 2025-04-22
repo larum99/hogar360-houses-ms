@@ -5,6 +5,6 @@ import com.hogar360.houses.houses.domain.utils.PageResult;
 
 
 public interface LocationServicePort {
-    LocationModel createLocation(Long cityId, String sector, String token);
+    LocationModel createLocation(Long cityId, String sector, String role);
     PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection);
 }
