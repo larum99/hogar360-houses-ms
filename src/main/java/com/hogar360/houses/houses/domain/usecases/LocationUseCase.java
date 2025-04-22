@@ -13,17 +13,15 @@ import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 public class LocationUseCase implements LocationServicePort {
     private final CityPersistencePort cityPersistencePort;
     private final LocationPersistencePort locationPersistencePort;
-    private final RoleValidatorPort roleValidatorPort;
 
-    public LocationUseCase(CityPersistencePort cityPersistencePort, LocationPersistencePort locationPersistencePort, RoleValidatorPort roleValidatorPort) {
+    public LocationUseCase(CityPersistencePort cityPersistencePort, LocationPersistencePort locationPersistencePort) {
         this.cityPersistencePort = cityPersistencePort;
         this.locationPersistencePort = locationPersistencePort;
-        this.roleValidatorPort = roleValidatorPort;
     }
 
     @Override
-    public LocationModel createLocation(Long cityId, String sector, String token) {
-        validateRole(token);
+    public LocationModel createLocation(Long cityId, String sector, String role) {
+        validateRole(role);
         CityModel city = validateAndGetCity(cityId);
         validateSectorLength(sector);
 
@@ -39,8 +37,7 @@ public class LocationUseCase implements LocationServicePort {
         return locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection);
     }
 
-    private void validateRole(String token) {
-        String role = roleValidatorPort.extractRole(token);
+    private void validateRole(String role) {
         if (!DomainConstants.ROLE_ADMIN.equals(role)) {
             throw new ForbiddenException();
         }

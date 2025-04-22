@@ -11,6 +11,7 @@ import com.hogar360.houses.houses.application.services.CategoryService;
 import com.hogar360.houses.houses.domain.model.CategoryModel;
 import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.in.CategoryServicePort;
+import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
+
     private final CategoryServicePort categoryServicePort;
     private final CategoryDtoMapper categoryDtoMapper;
+    private final RoleValidatorPort roleValidatorPort;
 
     @Override
     public SaveCategoryResponse save(SaveCategoryRequest request, String token) {
-        categoryServicePort.save(categoryDtoMapper.requestToModel(request), token);
+        String role = roleValidatorPort.extractRole(token);
+        categoryServicePort.save(categoryDtoMapper.requestToModel(request), role);
         return new SaveCategoryResponse(Constants.SAVE_CATEGORY_RESPONSE_MESSAGE, LocalDateTime.now());
     }
 

@@ -11,6 +11,7 @@ import com.hogar360.houses.houses.application.mappers.HouseSearchCriteriaMapper;
 import com.hogar360.houses.houses.application.services.HouseService;
 import com.hogar360.houses.houses.domain.model.HouseModel;
 import com.hogar360.houses.houses.domain.ports.in.HouseServicePort;
+import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import com.hogar360.houses.houses.domain.utils.PageResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,12 @@ public class HouseServiceImpl implements HouseService {
     private final HouseServicePort houseServicePort;
     private final HouseDtoMapper houseDtoMapper;
     private final HouseSearchCriteriaMapper houseSearchCriteriaMapper;
+    private final RoleValidatorPort roleValidatorPort;
 
     @Override
     public SaveHouseResponse save(SaveHouseRequest request, String token) {
-        houseServicePort.save(houseDtoMapper.requestToModel(request), token);
+        String role = roleValidatorPort.extractRole(token);
+        houseServicePort.save(houseDtoMapper.requestToModel(request), role);
         return new SaveHouseResponse(Constants.SAVE_HOUSE_RESPONSE_MESSAGE, LocalDateTime.now());
     }
 
