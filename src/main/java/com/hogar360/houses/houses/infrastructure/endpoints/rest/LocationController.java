@@ -101,8 +101,8 @@ public class LocationController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
             @org.springframework.web.bind.annotation.RequestBody SaveLocationRequest saveLocationRequest) {
 
-        String token = authorizationHeader.replace("Bearer ", ""); // Extraemos el token limpio
-        SaveLocationResponse response = locationService.save(saveLocationRequest, token); // Pasamos el token al servicio
+        String token = authorizationHeader.replace("Bearer ", "");
+        SaveLocationResponse response = locationService.save(saveLocationRequest, token);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

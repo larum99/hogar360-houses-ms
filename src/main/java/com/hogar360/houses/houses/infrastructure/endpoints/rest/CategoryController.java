@@ -93,7 +93,7 @@ public class CategoryController {
     )
     public ResponseEntity<SaveCategoryResponse> save(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
                                                      @org.springframework.web.bind.annotation.RequestBody SaveCategoryRequest saveCategoryRequest) {
-        String token = authorizationHeader.replace("Bearer ", ""); // extraemos el token limpio
+        String token = authorizationHeader.replace("Bearer ", "");
         SaveCategoryResponse response = categoryService.save(saveCategoryRequest, token);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

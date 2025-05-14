@@ -56,17 +56,29 @@ public class HouseController {
             @RequestParam(required = false) Integer bathrooms,
             @Parameter(description = SwaggerExamples.HOUSE_PRICE_DESCRIPTION, example = SwaggerExamples.HOUSE_PRICE_EXAMPLE)
             @RequestParam(required = false) BigDecimal price,
-            @Parameter(description = SwaggerExamples.SORT_BY_DESCRIPTION, example = SwaggerExamples.SORT_BY_EXAMPLE) // Corregido el nombre de la constante
+            @Parameter(description = SwaggerExamples.SORT_BY_DESCRIPTION, example = SwaggerExamples.SORT_BY_EXAMPLE)
             @RequestParam(required = false) String sortBy,
             @Parameter(description = SwaggerExamples.SORT_DIRECTION_DESCRIPTION, example = SwaggerExamples.SORT_DIRECTION_EXAMPLE)
             @RequestParam(required = false) String sortDirection,
             @Parameter(description = SwaggerExamples.PAGE_DESCRIPTION, example = SwaggerExamples.PAGE_EXAMPLE)
             @RequestParam(defaultValue = SwaggerExamples.PAGE_EXAMPLE) int page,
             @Parameter(description = SwaggerExamples.SIZE_DESCRIPTION, example = SwaggerExamples.SIZE_EXAMPLE)
-            @RequestParam(defaultValue = SwaggerExamples.SIZE_EXAMPLE) int size
+            @RequestParam(defaultValue = SwaggerExamples.SIZE_EXAMPLE) int size,
+            @Parameter(description = SwaggerExamples.HOUSE_PUBLISHER_ID_DESCRIPTION, example = SwaggerExamples.HOUSE_PUBLISHER_ID_EXAMPLE)
+            @RequestParam(required = false) Long publisherId
     ) {
-        ListHousesRequest request = new ListHousesRequest(department, city, sector, category, bedrooms, bathrooms, price, sortBy, sortDirection, page, size);
+        ListHousesRequest request = new ListHousesRequest(
+                department, city, sector, category, bedrooms, bathrooms,
+                price, sortBy, sortDirection, page, size, publisherId
+        );
         PagedHouseResponse response = houseService.listHouses(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{houseId}/owner")
+    public ResponseEntity<Long> getHouseOwner(@PathVariable Long houseId) {
+
+        Long ownerId = houseService.getOwnerIdByHouseId(houseId);
+        return ResponseEntity.ok(ownerId);
     }
 }

@@ -15,5 +15,6 @@ public record HouseResponse(
         LocationResponse location,
         LocalDate publicationDate,
         LocalDate activePublicationDate,
-        PublicationStatus status
+        PublicationStatus status,
+        Long publisherId
 ) {}

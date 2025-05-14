@@ -36,7 +36,6 @@ public class SecurityConfig {
                         .requestMatchers(SecurityConstants.CATEGORY_PROTECTED_PATH).authenticated()
                         .requestMatchers(SecurityConstants.LOCATION_PROTECTED_PATH).authenticated()
                         .requestMatchers(SecurityConstants.HOUSE_PROTECTED_PATH).authenticated()
-
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)

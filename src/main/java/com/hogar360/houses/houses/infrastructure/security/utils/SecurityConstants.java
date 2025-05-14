@@ -10,13 +10,12 @@ public class SecurityConstants {
         throw new IllegalStateException("Utility class");
     }
 
-    // JWT
     public static final String ROLE_CLAIM = "role";
+    public static final String ID_CLAIM = "id";
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
-
-    // CORS
-    public static final String ALLOWED_ORIGIN = "http://localhost:8090";
+    
+    public static final String ALLOWED_ORIGIN = "http://localhost:4200";
     public static final List<String> ALLOWED_METHODS = List.of(
             HttpMethod.GET.name(),
             HttpMethod.POST.name(),
@@ -32,10 +31,13 @@ public class SecurityConstants {
             "/api-docs",
             "/api/v1/category/**",
             "/api/v1/location/search",
-            "/api/v1/house/search"
-    );
+            "/api/v1/house/search",
+            "/api/v1/house/{houseId}/owner",
+            "/api/v1/city/department/{departmentId}",
+            "/api/v1/department"
+            );
 
-    public static final String CATEGORY_PROTECTED_PATH = "/api/v1/category/**";
+    public static final String CATEGORY_PROTECTED_PATH = "/api/v1/category/";
     public static final String LOCATION_PROTECTED_PATH = "/api/v1/location/";
     public static final String HOUSE_PROTECTED_PATH = "/api/v1/house/";
 

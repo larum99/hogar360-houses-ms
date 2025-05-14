@@ -17,4 +17,10 @@ public class JwtRoleValidator implements RoleValidatorPort {
     public String extractRole(String token) {
         return jwtUtil.extractRole(token);
     }
+
+    @Override
+    public Long extractUserId(String token) {
+        return jwtUtil.extractUserId(token);
+    }
 }
+

@@ -13,5 +13,6 @@ public record ListHousesRequest(
         String sortBy,
         String sortDirection,
         int page,
-        int size
+        int size,
+        Long publisherId
 ) {}

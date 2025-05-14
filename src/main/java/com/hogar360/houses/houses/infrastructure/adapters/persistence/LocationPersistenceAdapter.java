@@ -51,6 +51,13 @@ public class LocationPersistenceAdapter implements LocationPersistencePort {
         return Optional.ofNullable(model);
     }
 
+    @Override
+    public LocationModel getBySectorAndCityId(String sector, Long cityId) {
+        return locationEntityMapper.entityToModel(
+                locationRepository.findBySectorAndCityId(sector, cityId).orElse(null)
+        );
+    }
+
     private PageResult<LocationModel> convertToPageModel(Page<LocationEntity> entityPage) {
         List<LocationModel> locationModels = locationEntityMapper.entityToModelList(entityPage.getContent());
 

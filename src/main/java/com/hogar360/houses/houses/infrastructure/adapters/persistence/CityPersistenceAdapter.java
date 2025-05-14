@@ -9,10 +9,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CityPersistenceAdapter implements CityPersistencePort {
+
     private final CityRepository cityRepository;
     private final CityEntityMapper cityEntityMapper;
 
@@ -20,5 +24,17 @@ public class CityPersistenceAdapter implements CityPersistencePort {
     public CityModel getCityById(Long id) {
         CityEntity cityEntity = cityRepository.findById(id).orElse(null);
         return cityEntityMapper.entityToModel(cityEntity);
+    }
+
+    @Override
+    public List<CityModel> findCitiesByDepartmentId(Long departmentId) {
+        List<CityEntity> cityEntities = cityRepository.findByDepartmentId(departmentId);
+        List<CityModel> cityModels = new ArrayList<>();
+
+        for (CityEntity entity : cityEntities) {
+            cityModels.add(cityEntityMapper.entityToModel(entity));
+        }
+
+        return cityModels;
     }
 }

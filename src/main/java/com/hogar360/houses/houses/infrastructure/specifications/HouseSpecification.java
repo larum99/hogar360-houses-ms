@@ -48,18 +48,6 @@ public class HouseSpecification {
                         criteriaBuilder.equal(root.get(SpecificationsConstansts.BATHROOMS), bathrooms);
     }
 
-    public static Specification<HouseEntity> hasMinPrice(BigDecimal minPrice) {
-        return (root, query, criteriaBuilder) ->
-                minPrice == null ? criteriaBuilder.conjunction() :
-                        criteriaBuilder.greaterThanOrEqualTo(root.get(SpecificationsConstansts.PRICE), minPrice);
-    }
-
-    public static Specification<HouseEntity> hasMaxPrice(BigDecimal maxPrice) {
-        return (root, query, criteriaBuilder) ->
-                maxPrice == null ? criteriaBuilder.conjunction() :
-                        criteriaBuilder.lessThanOrEqualTo(root.get(SpecificationsConstansts.PRICE), maxPrice);
-    }
-
     public static Specification<HouseEntity> hasPrice(BigDecimal price, BigDecimal minPrice, BigDecimal maxPrice) {
         return (root, query, criteriaBuilder) -> {
             if (price != null) {
@@ -79,5 +67,11 @@ public class HouseSpecification {
     public static Specification<HouseEntity> isPublished() {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get(SpecificationsConstansts.STATUS), PublicationStatus.PUBLISHED);
+    }
+
+    public static Specification<HouseEntity> hasPublisher(Long publisherId) {
+        return (root, query, criteriaBuilder) ->
+                publisherId == null ? criteriaBuilder.conjunction() :
+                        criteriaBuilder.equal(root.get(SpecificationsConstansts.PUBLISHER_ID), publisherId);
     }
 }

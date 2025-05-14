@@ -16,6 +16,7 @@ public class HouseSearchCriteria {
     private String sortDirection;
     private int page;
     private int size;
+    private Long publisherId;
 
     public HouseSearchCriteria() {
     }
@@ -23,7 +24,7 @@ public class HouseSearchCriteria {
     public HouseSearchCriteria(String sector, String city, String department, String category,
                                Integer bedrooms, Integer bathrooms, BigDecimal price,
                                BigDecimal minPrice, BigDecimal maxPrice,
-                               String sortBy, String sortDirection, int page, int size) {
+                               String sortBy, String sortDirection, int page, int size, Long publisherId) {
         this.sector = sector;
         this.city = city;
         this.department = department;
@@ -37,6 +38,7 @@ public class HouseSearchCriteria {
         this.sortDirection = sortDirection;
         this.page = page;
         this.size = size;
+        this.publisherId = publisherId;
     }
 
     public String getSector() {
@@ -141,5 +143,13 @@ public class HouseSearchCriteria {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public Long getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(Long publisherId) {
+        this.publisherId = publisherId;
     }
 }

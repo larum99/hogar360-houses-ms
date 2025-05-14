@@ -206,4 +206,8 @@ public class SwaggerExamples {
 
     public static final String HOUSE_PRICE_DESCRIPTION = "Precio exacto de la propiedad";
     public static final String HOUSE_PRICE_EXAMPLE = "250000.00";
+
+    public static final String HOUSE_PUBLISHER_ID_DESCRIPTION = "ID del usuario que publicó la propiedad";
+    public static final String HOUSE_PUBLISHER_ID_EXAMPLE = "5";
+
 }

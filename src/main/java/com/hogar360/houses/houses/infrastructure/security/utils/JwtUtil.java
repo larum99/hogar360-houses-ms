@@ -33,4 +33,9 @@ public class JwtUtil {
     public String extractRole(String token) {
         return extractClaims(token).get(SecurityConstants.ROLE_CLAIM, String.class);
     }
+
+    public Long extractUserId(String token) {
+        return extractClaims(token).get(SecurityConstants.ID_CLAIM, Long.class);
+    }
+
 }

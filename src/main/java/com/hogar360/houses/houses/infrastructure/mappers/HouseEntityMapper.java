@@ -12,10 +12,12 @@ public interface HouseEntityMapper {
 
     @Mapping(source = "category", target = "category")
     @Mapping(source = "location", target = "location")
+    @Mapping(source = "publisherId", target = "publisherId")
     HouseModel entityToModel(HouseEntity houseEntity);
 
     @Mapping(source = "category", target = "category")
     @Mapping(source = "location", target = "location")
+    @Mapping(source = "publisherId", target = "publisherId")
     HouseEntity modelToEntity(HouseModel houseModel);
 
     List<HouseModel> entityListToModelList(List<HouseEntity> entities);

@@ -46,6 +46,12 @@ public class ControllerAdvisor {
                 LocalDateTime.now()));
     }
 
+    @ExceptionHandler(LocationAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleLocationAlreadyExistsException(LocationAlreadyExistsException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.LOCATION_ALREADY_EXISTS_EXCEPTION,
+                LocalDateTime.now()));
+    }
+
     @ExceptionHandler(PageNumberNegativeException.class)
     public ResponseEntity<ExceptionResponse> handlePageNumberNegativeException(PageNumberNegativeException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.PAGE_NUMBER_NEGATIVE_EXCEPTION,

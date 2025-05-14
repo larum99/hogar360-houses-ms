@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
 
@@ -15,6 +17,10 @@ public interface LocationRepository extends JpaRepository<LocationEntity, Long> 
         SELECT l FROM LocationEntity l
         WHERE LOWER(l.city.name) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
            OR LOWER(l.city.department.name) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+               OR LOWER(l.sector) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
     """)
     Page<LocationEntity> searchByCityOrDepartment(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    Optional<LocationEntity> findBySectorAndCityId(String sector, Long cityId);
+
 }

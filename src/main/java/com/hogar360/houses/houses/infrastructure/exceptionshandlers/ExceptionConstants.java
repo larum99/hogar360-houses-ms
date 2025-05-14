@@ -10,6 +10,7 @@ public class ExceptionConstants {
     public static final String DEPARTMENT_NOT_FOUND_EXCEPTION = "The department does not exist";
     public static final String CITY_NOT_FOUND_EXCEPTION = "The city does not exist in the specified department";
     public static final String LOCATION_SECTOR_MAX_SIZE_MESSAGE = "The sector cannot exceed 50 characters";
+    public static final String LOCATION_ALREADY_EXISTS_EXCEPTION = "The location already exists in this city";
 
     public static final String PAGE_NUMBER_NEGATIVE_EXCEPTION = "Page number cannot be negative.";
     public static final String PAGE_SIZE_INVALID_EXCEPTION = "Size must be greater than zero.";

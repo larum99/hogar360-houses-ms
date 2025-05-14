@@ -30,6 +30,7 @@ public class HousePersistenceAdapter implements HousePersistencePort {
 
     @Override
     public void save(HouseModel houseModel) {
+        houseModel.setPublisherId(houseModel.getPublisherId());
         houseRepository.save(houseEntityMapper.modelToEntity(houseModel));
     }
 
@@ -44,7 +45,6 @@ public class HousePersistenceAdapter implements HousePersistencePort {
     public PageResult<HouseModel> search(HouseSearchCriteria criteria) {
         Sort sort = createSort(criteria.getSortBy(), "asc".equalsIgnoreCase(criteria.getSortDirection()));
         Pageable pageable = PageRequest.of(criteria.getPage(), criteria.getSize(), sort);
-
         var spec = HouseSpecification.hasSector(criteria.getSector())
                 .and(HouseSpecification.hasCity(criteria.getCity()))
                 .and(HouseSpecification.hasDepartment(criteria.getDepartment()))
@@ -56,6 +56,7 @@ public class HousePersistenceAdapter implements HousePersistencePort {
                         criteria.getMinPrice(),
                         criteria.getMaxPrice()
                 ))
+                .and(HouseSpecification.hasPublisher(criteria.getPublisherId()))
                 .and(HouseSpecification.isPublished());
 
         Page<HouseEntity> page = houseRepository.findAll(spec, pageable);
@@ -71,5 +72,10 @@ public class HousePersistenceAdapter implements HousePersistencePort {
                 page.isFirst(),
                 page.isLast()
         );
+    }
+
+    @Override
+    public Long findPublisherIdById(Long houseId) {
+        return houseRepository.findPublisherIdById(houseId);
     }
 }

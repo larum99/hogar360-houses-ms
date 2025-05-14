@@ -18,15 +18,13 @@ public class HouseModel {
     private LocalDate publicationDate;
     private LocalDate activePublicationDate;
     private PublicationStatus status;
+    private Long publisherId;
 
-    public HouseModel(){
-
-    }
+    public HouseModel() {}
 
     public HouseModel(Long id, String name, String description, CategoryModel category,
                       int bedrooms, int bathrooms, BigDecimal price, LocationModel location,
-                      LocalDate publicationDate, LocalDate activePublicationDate, PublicationStatus status) {
-
+                      LocalDate publicationDate, LocalDate activePublicationDate, PublicationStatus status, Long publisherId) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -38,93 +36,104 @@ public class HouseModel {
         this.publicationDate = publicationDate;
         this.activePublicationDate = activePublicationDate;
         this.status = status;
+        this.publisherId = publisherId;  // Inicialización del publisherId
     }
 
+    // Getters y setters
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public CategoryModel getCategory() {
-        return category;
-    }
-
-    public int getBedrooms() {
-        return bedrooms;
-    }
-
-    public int getBathrooms() {
-        return bathrooms;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public LocationModel getLocation() {
-        return location;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public CategoryModel getCategory() {
+        return category;
+    }
+
     public void setCategory(CategoryModel category) {
         this.category = category;
+    }
+
+    public int getBedrooms() {
+        return bedrooms;
     }
 
     public void setBedrooms(int bedrooms) {
         this.bedrooms = bedrooms;
     }
 
+    public int getBathrooms() {
+        return bathrooms;
+    }
+
     public void setBathrooms(int bathrooms) {
         this.bathrooms = bathrooms;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
     }
 
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
+    public LocationModel getLocation() {
+        return location;
+    }
+
     public void setLocation(LocationModel location) {
         this.location = location;
-    }
-
-    public void setPublicationDate(LocalDate publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public void setActivePublicationDate(LocalDate activePublicationDate) {
-        this.activePublicationDate = activePublicationDate;
-    }
-
-    public void setStatus(PublicationStatus status) {
-        this.status = status;
     }
 
     public LocalDate getPublicationDate() {
         return publicationDate;
     }
 
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
     public LocalDate getActivePublicationDate() {
         return activePublicationDate;
     }
 
+    public void setActivePublicationDate(LocalDate activePublicationDate) {
+        this.activePublicationDate = activePublicationDate;
+    }
+
     public PublicationStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(PublicationStatus status) {
+        this.status = status;
+    }
+
+    // Getter y setter para publisherId
+    public Long getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(Long publisherId) {
+        this.publisherId = publisherId;
     }
 }
