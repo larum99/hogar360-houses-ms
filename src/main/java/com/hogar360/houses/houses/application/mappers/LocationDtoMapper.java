@@ -1,6 +1,7 @@
 package com.hogar360.houses.houses.application.mappers;
 
 import com.hogar360.houses.houses.application.dto.response.LocationResponse;
+import com.hogar360.houses.houses.application.dto.response.LocationSimpleResponse;
 import com.hogar360.houses.houses.domain.model.LocationModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,4 +18,7 @@ public interface LocationDtoMapper {
     LocationResponse modelToResponse(LocationModel locationModel);
 
     List<LocationResponse> modelToResponseList(List<LocationModel> locationModels);
+
+    LocationSimpleResponse modelToSimpleResponse(LocationModel model);
+    List<LocationSimpleResponse> modelToSimpleResponseList(List<LocationModel> models);
 }

@@ -71,4 +71,10 @@ public class LocationPersistenceAdapter implements LocationPersistencePort {
                 entityPage.isLast()
         );
     }
+
+    @Override
+    public List<LocationModel> findByCityId(Long cityId) {
+        List<LocationEntity> entities = locationRepository.findByCityId(cityId);
+        return locationEntityMapper.entityToModelList(entities);
+    }
 }

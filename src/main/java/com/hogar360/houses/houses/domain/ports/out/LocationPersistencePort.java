@@ -3,6 +3,7 @@ package com.hogar360.houses.houses.domain.ports.out;
 import com.hogar360.houses.houses.domain.model.LocationModel;
 import com.hogar360.houses.houses.domain.utils.PageResult;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LocationPersistencePort {
@@ -10,4 +11,5 @@ public interface LocationPersistencePort {
     PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection);
     Optional<LocationModel> findById(Long id);
     LocationModel getBySectorAndCityId(String sector, Long cityId);
+    List<LocationModel> findByCityId(Long cityId);
 }

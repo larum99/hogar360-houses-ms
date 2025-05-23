@@ -39,10 +39,11 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
-    public PagedHouseResponse listHouses(ListHousesRequest request) {
+    public PagedHouseResponse listHouses(ListHousesRequest request, String token) {
+        String role = roleValidatorPort.extractRole(token);
         var criteria = houseSearchCriteriaMapper.requestToCriteria(request);
         criteria.setPublisherId(request.publisherId());
-        PageResult<HouseModel> pageResult = houseServicePort.searchHouses(criteria);
+        PageResult<HouseModel> pageResult = houseServicePort.searchHouses(criteria, role);
         List<HouseResponse> responses = houseDtoMapper.modelToResponseList(pageResult.getContent());
 
         return new PagedHouseResponse(

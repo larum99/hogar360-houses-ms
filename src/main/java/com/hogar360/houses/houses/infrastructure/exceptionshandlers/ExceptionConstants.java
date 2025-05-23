@@ -21,6 +21,7 @@ public class ExceptionConstants {
     public static final String HOUSE_MINIMUM_BEDROOMS_REQUIRED_EXCEPTION = "The house must have at least the minimum number of bedrooms";
     public static final String HOUSE_MINIMUM_PRICE_REQUIRED_EXCEPTION = "The house price must meet the minimum requirements";
     public static final String INVALID_PUBLICATION_DATE_EXCEPTION = "The publication date is invalid";
+    public static final String HOUSE_ALREADY_EXISTS_EXCEPTION = "The house already exists with the same name and location.";
 
     public static final String INVALID_SORT_BY_FIELD_EXCEPTION = "The sorting field is invalid";
     public static final String INVALID_SORT_DIRECTION_EXCEPTION = "The sorting direction is invalid";

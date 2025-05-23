@@ -2,6 +2,7 @@ package com.hogar360.houses.houses.infrastructure.endpoints.rest;
 
 import com.hogar360.houses.commons.configurations.config.SwaggerExamples;
 import com.hogar360.houses.houses.application.dto.request.SaveLocationRequest;
+import com.hogar360.houses.houses.application.dto.response.LocationSimpleResponse;
 import com.hogar360.houses.houses.application.dto.response.PagedLocationResponse;
 import com.hogar360.houses.houses.application.dto.response.SaveLocationResponse;
 import com.hogar360.houses.houses.application.services.LocationService;
@@ -17,7 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.hogar360.houses.commons.configurations.config.SwaggerExamples.*;
 
@@ -29,6 +33,7 @@ public class LocationController {
      private final LocationService locationService;
 
     @PostMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Guardar ubicación",
             description = "Crea una nueva ubicación en el sistema",
@@ -159,5 +164,10 @@ public class LocationController {
     ) {
         PagedLocationResponse response = locationService.searchLocations(searchTerm, page, size, sortBy, sortDirection);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/city/{cityId}")
+    public ResponseEntity<List<LocationSimpleResponse>> getLocationsByCityId(@PathVariable Long cityId) {
+        return ResponseEntity.ok(locationService.findByCityId(cityId));
     }
 }

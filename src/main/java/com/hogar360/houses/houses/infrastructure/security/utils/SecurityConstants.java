@@ -31,14 +31,15 @@ public class SecurityConstants {
             "/api-docs",
             "/api/v1/category/**",
             "/api/v1/location/search",
-            "/api/v1/house/search",
             "/api/v1/house/{houseId}/owner",
             "/api/v1/city/department/{departmentId}",
-            "/api/v1/department"
-            );
+            "/api/v1/department",
+            "/api/v1/location/city/**"
+    );
 
     public static final String CATEGORY_PROTECTED_PATH = "/api/v1/category/";
     public static final String LOCATION_PROTECTED_PATH = "/api/v1/location/";
     public static final String HOUSE_PROTECTED_PATH = "/api/v1/house/";
+    public static final String HOUSE_PROTECTED_PATH_LIST_ALL = "/api/v1/house/search";
 
 }

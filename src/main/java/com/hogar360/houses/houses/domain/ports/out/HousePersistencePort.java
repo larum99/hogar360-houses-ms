@@ -13,4 +13,5 @@ public interface HousePersistencePort {
     PageResult<HouseModel> search(HouseSearchCriteria criteria);
 
     Long findPublisherIdById(Long houseId);
+    boolean existsByNameAndLocationId(String name, Long locationId);
 }

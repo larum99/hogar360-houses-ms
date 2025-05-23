@@ -36,10 +36,9 @@ public class HouseModel {
         this.publicationDate = publicationDate;
         this.activePublicationDate = activePublicationDate;
         this.status = status;
-        this.publisherId = publisherId;  // Inicialización del publisherId
+        this.publisherId = publisherId;
     }
 
-    // Getters y setters
     public Long getId() {
         return id;
     }
@@ -128,7 +127,6 @@ public class HouseModel {
         this.status = status;
     }
 
-    // Getter y setter para publisherId
     public Long getPublisherId() {
         return publisherId;
     }

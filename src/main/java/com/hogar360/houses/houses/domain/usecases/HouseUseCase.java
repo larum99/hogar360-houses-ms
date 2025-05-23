@@ -47,14 +47,22 @@ public class HouseUseCase implements HouseServicePort {
         houseModel.setPublicationDate(LocalDate.now());
 
         houseModel.setPublisherId(userId);
+
+        validateHouseNameUniqueInLocation(houseModel.getName(), houseModel.getLocation().getId());
         housePersistencePort.save(houseModel);
     }
 
     @Override
-    public PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria) {
+    public PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria, String role) {
         validatePageNumber(criteria.getPage());
         validatePageSize(criteria.getSize());
         validateSearchCriteria(criteria);
+
+        if (DomainConstants.ROLE_ADMIN.equals(role)) {
+            criteria.setStatus(null);
+        } else {
+            criteria.setStatus(PublicationStatus.PUBLISHED);
+        }
         return housePersistencePort.search(criteria);
     }
 
@@ -153,11 +161,20 @@ public class HouseUseCase implements HouseServicePort {
                 DomainConstants.SORT_BY_BEDROOMS,
                 DomainConstants.SORT_BY_BATHROOMS,
                 DomainConstants.SORT_BY_PUBLICATION_DATE,
-                DomainConstants.SORT_BY_CATEGORY
+                DomainConstants.SORT_BY_CATEGORY,
+                DomainConstants.SORT_BY_CITY,
+                DomainConstants.SORT_BY_SECTOR
         );
 
         if (!allowedFields.contains(sortBy)) {
             throw new InvalidSortByFieldException();
+        }
+    }
+
+    private void validateHouseNameUniqueInLocation(String name, Long locationId) {
+        boolean exists = housePersistencePort.existsByNameAndLocationId(name, locationId);
+        if (exists) {
+            throw new HouseAlreadyExistsException();
         }
     }
 }

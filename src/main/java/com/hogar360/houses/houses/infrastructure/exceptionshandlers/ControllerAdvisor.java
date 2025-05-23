@@ -119,4 +119,12 @@ public class ControllerAdvisor {
                 LocalDateTime.now()
         ));
     }
+
+    @ExceptionHandler(HouseAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleHouseAlreadyExistsException(HouseAlreadyExistsException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                ExceptionConstants.HOUSE_ALREADY_EXISTS_EXCEPTION,
+                LocalDateTime.now()
+        ));
+    }
 }

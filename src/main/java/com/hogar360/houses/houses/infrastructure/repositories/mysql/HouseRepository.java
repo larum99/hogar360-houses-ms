@@ -16,4 +16,5 @@ public interface HouseRepository extends JpaRepository<HouseEntity, Long>, JpaSp
     List<HouseEntity> findByActivePublicationDateLessThanEqualAndStatusNot(LocalDate date, PublicationStatus status);
     @Query("SELECT h.publisherId FROM HouseEntity h WHERE h.id = :houseId")
     Long findPublisherIdById(@Param("houseId") Long houseId);
+    boolean existsByNameAndLocationId(String name, Long locationId);
 }

@@ -3,6 +3,7 @@ package com.hogar360.houses.houses.application.services.impl;
 import com.hogar360.houses.commons.configurations.utils.Constants;
 import com.hogar360.houses.houses.application.dto.request.SaveLocationRequest;
 import com.hogar360.houses.houses.application.dto.response.LocationResponse;
+import com.hogar360.houses.houses.application.dto.response.LocationSimpleResponse;
 import com.hogar360.houses.houses.application.dto.response.PagedLocationResponse;
 import com.hogar360.houses.houses.application.dto.response.SaveLocationResponse;
 import com.hogar360.houses.houses.application.mappers.LocationDtoMapper;
@@ -47,4 +48,11 @@ public class LocationServiceImpl implements LocationService {
                 locationPage.isLast()
         );
     }
+
+    @Override
+    public List<LocationSimpleResponse> findByCityId(Long cityId) {
+        List<LocationModel> locations = locationServicePort.findByCityId(cityId);
+        return locationDtoMapper.modelToSimpleResponseList(locations);
+    }
+
 }

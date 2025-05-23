@@ -9,6 +9,8 @@ import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 
+import java.util.List;
+
 public class LocationUseCase implements LocationServicePort {
     private final CityPersistencePort cityPersistencePort;
     private final LocationPersistencePort locationPersistencePort;
@@ -35,6 +37,14 @@ public class LocationUseCase implements LocationServicePort {
         validatePageNumber(page);
         validatePageSize(size);
         return locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection);
+    }
+
+    @Override
+    public List<LocationModel> findByCityId(Long cityId) {
+
+        CityModel city = validateAndGetCity(cityId);
+
+        return locationPersistencePort.findByCityId(city.getId());
     }
 
     private void validateRole(String role) {

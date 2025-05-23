@@ -57,7 +57,7 @@ public class HousePersistenceAdapter implements HousePersistencePort {
                         criteria.getMaxPrice()
                 ))
                 .and(HouseSpecification.hasPublisher(criteria.getPublisherId()))
-                .and(HouseSpecification.isPublished());
+                .and(HouseSpecification.hasStatus(criteria.getStatus()));
 
         Page<HouseEntity> page = houseRepository.findAll(spec, pageable);
 
@@ -77,5 +77,10 @@ public class HousePersistenceAdapter implements HousePersistencePort {
     @Override
     public Long findPublisherIdById(Long houseId) {
         return houseRepository.findPublisherIdById(houseId);
+    }
+
+    @Override
+    public boolean existsByNameAndLocationId(String name, Long locationId) {
+        return houseRepository.existsByNameAndLocationId(name, locationId);
     }
 }

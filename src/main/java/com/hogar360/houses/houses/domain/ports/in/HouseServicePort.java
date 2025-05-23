@@ -6,6 +6,6 @@
 
     public interface HouseServicePort {
         void save(HouseModel houseModel, String role, Long userId);
-        PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria);
+        PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria, String role);
         Long findPublisherIdById(Long houseId);
     }

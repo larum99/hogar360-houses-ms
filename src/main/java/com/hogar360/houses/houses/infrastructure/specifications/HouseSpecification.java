@@ -64,9 +64,10 @@ public class HouseSpecification {
         };
     }
 
-    public static Specification<HouseEntity> isPublished() {
+    public static Specification<HouseEntity> hasStatus(PublicationStatus status) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get(SpecificationsConstansts.STATUS), PublicationStatus.PUBLISHED);
+                status == null ? criteriaBuilder.conjunction() :
+                        criteriaBuilder.equal(root.get(SpecificationsConstansts.STATUS), status);
     }
 
     public static Specification<HouseEntity> hasPublisher(Long publisherId) {
