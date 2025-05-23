@@ -10,6 +10,7 @@ public class ExceptionConstants {
     public static final String DEPARTMENT_NOT_FOUND_EXCEPTION = "The department does not exist";
     public static final String CITY_NOT_FOUND_EXCEPTION = "The city does not exist in the specified department";
     public static final String LOCATION_SECTOR_MAX_SIZE_MESSAGE = "The sector cannot exceed 50 characters";
+    public static final String LOCATION_ALREADY_EXISTS_EXCEPTION = "The location already exists in this city";
 
     public static final String PAGE_NUMBER_NEGATIVE_EXCEPTION = "Page number cannot be negative.";
     public static final String PAGE_SIZE_INVALID_EXCEPTION = "Size must be greater than zero.";
@@ -20,6 +21,7 @@ public class ExceptionConstants {
     public static final String HOUSE_MINIMUM_BEDROOMS_REQUIRED_EXCEPTION = "The house must have at least the minimum number of bedrooms";
     public static final String HOUSE_MINIMUM_PRICE_REQUIRED_EXCEPTION = "The house price must meet the minimum requirements";
     public static final String INVALID_PUBLICATION_DATE_EXCEPTION = "The publication date is invalid";
+    public static final String HOUSE_ALREADY_EXISTS_EXCEPTION = "The house already exists with the same name and location.";
 
     public static final String INVALID_SORT_BY_FIELD_EXCEPTION = "The sorting field is invalid";
     public static final String INVALID_SORT_DIRECTION_EXCEPTION = "The sorting direction is invalid";

@@ -46,6 +46,12 @@ public class ControllerAdvisor {
                 LocalDateTime.now()));
     }
 
+    @ExceptionHandler(LocationAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleLocationAlreadyExistsException(LocationAlreadyExistsException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.LOCATION_ALREADY_EXISTS_EXCEPTION,
+                LocalDateTime.now()));
+    }
+
     @ExceptionHandler(PageNumberNegativeException.class)
     public ResponseEntity<ExceptionResponse> handlePageNumberNegativeException(PageNumberNegativeException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(ExceptionConstants.PAGE_NUMBER_NEGATIVE_EXCEPTION,
@@ -110,6 +116,14 @@ public class ControllerAdvisor {
     public ResponseEntity<ExceptionResponse> handleForbidden(ForbiddenException exception) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionResponse(
                 ExceptionConstants.FORBIDDEN_MESSAGE,
+                LocalDateTime.now()
+        ));
+    }
+
+    @ExceptionHandler(HouseAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleHouseAlreadyExistsException(HouseAlreadyExistsException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                ExceptionConstants.HOUSE_ALREADY_EXISTS_EXCEPTION,
                 LocalDateTime.now()
         ));
     }

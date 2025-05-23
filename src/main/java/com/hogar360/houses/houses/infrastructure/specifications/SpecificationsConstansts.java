@@ -18,4 +18,5 @@ public final class SpecificationsConstansts {
     public static final String BATHROOMS = "bathrooms";
     public static final String PRICE = "price";
     public static final String STATUS = "status";
+    public static final String PUBLISHER_ID = "publisherId";
 }

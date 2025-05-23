@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -28,6 +29,7 @@ public class HouseController {
     private final HouseService houseService;
 
     @SaveHouseDoc
+    @PreAuthorize("hasRole('VENDEDOR')")
     @PostMapping(ControllerConstants.SAVE_PATH)
     public ResponseEntity<SaveHouseResponse> save(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
@@ -42,6 +44,7 @@ public class HouseController {
     @SearchHousesDoc
     @GetMapping(ControllerConstants.SEARCH_PATH)
     public ResponseEntity<PagedHouseResponse> search(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
             @Parameter(description = SwaggerExamples.HOUSE_DEPARTMENT_DESCRIPTION, example = SwaggerExamples.HOUSE_DEPARTMENT_EXAMPLE)
             @RequestParam(required = false) String department,
             @Parameter(description = SwaggerExamples.HOUSE_CITY_DESCRIPTION, example = SwaggerExamples.HOUSE_CITY_EXAMPLE)
@@ -56,17 +59,30 @@ public class HouseController {
             @RequestParam(required = false) Integer bathrooms,
             @Parameter(description = SwaggerExamples.HOUSE_PRICE_DESCRIPTION, example = SwaggerExamples.HOUSE_PRICE_EXAMPLE)
             @RequestParam(required = false) BigDecimal price,
-            @Parameter(description = SwaggerExamples.SORT_BY_DESCRIPTION, example = SwaggerExamples.SORT_BY_EXAMPLE) // Corregido el nombre de la constante
+            @Parameter(description = SwaggerExamples.SORT_BY_DESCRIPTION, example = SwaggerExamples.SORT_BY_EXAMPLE)
             @RequestParam(required = false) String sortBy,
             @Parameter(description = SwaggerExamples.SORT_DIRECTION_DESCRIPTION, example = SwaggerExamples.SORT_DIRECTION_EXAMPLE)
             @RequestParam(required = false) String sortDirection,
             @Parameter(description = SwaggerExamples.PAGE_DESCRIPTION, example = SwaggerExamples.PAGE_EXAMPLE)
             @RequestParam(defaultValue = SwaggerExamples.PAGE_EXAMPLE) int page,
             @Parameter(description = SwaggerExamples.SIZE_DESCRIPTION, example = SwaggerExamples.SIZE_EXAMPLE)
-            @RequestParam(defaultValue = SwaggerExamples.SIZE_EXAMPLE) int size
+            @RequestParam(defaultValue = SwaggerExamples.SIZE_EXAMPLE) int size,
+            @Parameter(description = SwaggerExamples.HOUSE_PUBLISHER_ID_DESCRIPTION, example = SwaggerExamples.HOUSE_PUBLISHER_ID_EXAMPLE)
+            @RequestParam(required = false) Long publisherId
     ) {
-        ListHousesRequest request = new ListHousesRequest(department, city, sector, category, bedrooms, bathrooms, price, sortBy, sortDirection, page, size);
-        PagedHouseResponse response = houseService.listHouses(request);
+        ListHousesRequest request = new ListHousesRequest(
+                department, city, sector, category, bedrooms, bathrooms,
+                price, sortBy, sortDirection, page, size, publisherId
+        );
+        String token = authorizationHeader.replace("Bearer ", "");
+        PagedHouseResponse response = houseService.listHouses(request, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{houseId}/owner")
+    public ResponseEntity<Long> getHouseOwner(@PathVariable Long houseId) {
+
+        Long ownerId = houseService.getOwnerIdByHouseId(houseId);
+        return ResponseEntity.ok(ownerId);
     }
 }

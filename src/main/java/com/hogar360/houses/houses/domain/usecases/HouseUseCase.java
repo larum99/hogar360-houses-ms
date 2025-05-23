@@ -6,7 +6,6 @@ import com.hogar360.houses.houses.domain.model.HouseModel;
 import com.hogar360.houses.houses.domain.model.CategoryModel;
 import com.hogar360.houses.houses.domain.model.LocationModel;
 import com.hogar360.houses.houses.domain.ports.in.HouseServicePort;
-import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import com.hogar360.houses.houses.domain.ports.out.HousePersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
@@ -35,7 +34,7 @@ public class HouseUseCase implements HouseServicePort {
     }
 
     @Override
-    public void save(HouseModel houseModel, String role) {
+    public void save(HouseModel houseModel, String role, Long userId) {
         validateRole(role);
         validateRequiredFields(houseModel);
         validateCategoryExists(houseModel.getCategory());
@@ -47,15 +46,29 @@ public class HouseUseCase implements HouseServicePort {
         houseModel.setStatus(status);
         houseModel.setPublicationDate(LocalDate.now());
 
+        houseModel.setPublisherId(userId);
+
+        validateHouseNameUniqueInLocation(houseModel.getName(), houseModel.getLocation().getId());
         housePersistencePort.save(houseModel);
     }
 
     @Override
-    public PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria) {
+    public PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria, String role) {
         validatePageNumber(criteria.getPage());
         validatePageSize(criteria.getSize());
         validateSearchCriteria(criteria);
+
+        if (DomainConstants.ROLE_ADMIN.equals(role)) {
+            criteria.setStatus(null);
+        } else {
+            criteria.setStatus(PublicationStatus.PUBLISHED);
+        }
         return housePersistencePort.search(criteria);
+    }
+
+    @Override
+    public Long findPublisherIdById(Long houseId) {
+        return housePersistencePort.findPublisherIdById(houseId);
     }
 
     private void validateRole(String role) {
@@ -148,11 +161,20 @@ public class HouseUseCase implements HouseServicePort {
                 DomainConstants.SORT_BY_BEDROOMS,
                 DomainConstants.SORT_BY_BATHROOMS,
                 DomainConstants.SORT_BY_PUBLICATION_DATE,
-                DomainConstants.SORT_BY_CATEGORY
+                DomainConstants.SORT_BY_CATEGORY,
+                DomainConstants.SORT_BY_CITY,
+                DomainConstants.SORT_BY_SECTOR
         );
 
         if (!allowedFields.contains(sortBy)) {
             throw new InvalidSortByFieldException();
+        }
+    }
+
+    private void validateHouseNameUniqueInLocation(String name, Long locationId) {
+        boolean exists = housePersistencePort.existsByNameAndLocationId(name, locationId);
+        if (exists) {
+            throw new HouseAlreadyExistsException();
         }
     }
 }

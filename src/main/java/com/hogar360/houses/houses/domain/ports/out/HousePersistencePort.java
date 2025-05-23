@@ -11,4 +11,7 @@ public interface HousePersistencePort {
     void save(HouseModel houseModel);
     List<HouseModel> findAllPendingToPublish(LocalDate today);
     PageResult<HouseModel> search(HouseSearchCriteria criteria);
+
+    Long findPublisherIdById(Long houseId);
+    boolean existsByNameAndLocationId(String name, Long locationId);
 }

@@ -7,8 +7,9 @@ import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.in.LocationServicePort;
 import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
 import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
-import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;  // Agregar esta importación
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
+
+import java.util.List;
 
 public class LocationUseCase implements LocationServicePort {
     private final CityPersistencePort cityPersistencePort;
@@ -24,6 +25,7 @@ public class LocationUseCase implements LocationServicePort {
         validateRole(role);
         CityModel city = validateAndGetCity(cityId);
         validateSectorLength(sector);
+        checkIfSectorAlreadyExists(sector, cityId);
 
         LocationModel newLocation = new LocationModel(null, city, sector);
 
@@ -35,6 +37,14 @@ public class LocationUseCase implements LocationServicePort {
         validatePageNumber(page);
         validatePageSize(size);
         return locationPersistencePort.searchLocations(searchTerm, page, size, sortBy, sortDirection);
+    }
+
+    @Override
+    public List<LocationModel> findByCityId(Long cityId) {
+
+        CityModel city = validateAndGetCity(cityId);
+
+        return locationPersistencePort.findByCityId(city.getId());
     }
 
     private void validateRole(String role) {
@@ -54,6 +64,13 @@ public class LocationUseCase implements LocationServicePort {
     private void validateSectorLength(String sector) {
         if (sector != null && sector.length() > DomainConstants.MAX_SECTOR_LENGTH) {
             throw new LocationSectorMaxSizeExceededException();
+        }
+    }
+
+    private void checkIfSectorAlreadyExists(String sector, Long cityId) {
+        LocationModel existingLocation = locationPersistencePort.getBySectorAndCityId(sector, cityId);
+        if (existingLocation != null) {
+            throw new LocationAlreadyExistsException();
         }
     }
 

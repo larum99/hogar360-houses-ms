@@ -1,5 +1,7 @@
 package com.hogar360.houses.houses.domain.criteria;
 
+import com.hogar360.houses.houses.domain.utils.PublicationStatus;
+
 import java.math.BigDecimal;
 
 public class HouseSearchCriteria {
@@ -16,6 +18,11 @@ public class HouseSearchCriteria {
     private String sortDirection;
     private int page;
     private int size;
+    private Long publisherId;
+    private PublicationStatus status;
+
+
+
 
     public HouseSearchCriteria() {
     }
@@ -23,7 +30,7 @@ public class HouseSearchCriteria {
     public HouseSearchCriteria(String sector, String city, String department, String category,
                                Integer bedrooms, Integer bathrooms, BigDecimal price,
                                BigDecimal minPrice, BigDecimal maxPrice,
-                               String sortBy, String sortDirection, int page, int size) {
+                               String sortBy, String sortDirection, int page, int size, Long publisherId, PublicationStatus status) {
         this.sector = sector;
         this.city = city;
         this.department = department;
@@ -37,6 +44,8 @@ public class HouseSearchCriteria {
         this.sortDirection = sortDirection;
         this.page = page;
         this.size = size;
+        this.publisherId = publisherId;
+        this.status = status;
     }
 
     public String getSector() {
@@ -141,5 +150,21 @@ public class HouseSearchCriteria {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public Long getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(Long publisherId) {
+        this.publisherId = publisherId;
+    }
+
+    public PublicationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PublicationStatus status) {
+        this.status = status;
     }
 }

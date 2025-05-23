@@ -52,4 +52,7 @@ public class HouseEntity {
     @Column(name = "status", nullable = false)
     private PublicationStatus status;
 
+    @Column(name = "publisher_id", nullable = false)
+    private Long publisherId;
+
 }

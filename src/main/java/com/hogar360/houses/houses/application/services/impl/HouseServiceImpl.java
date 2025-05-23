@@ -31,14 +31,19 @@ public class HouseServiceImpl implements HouseService {
     @Override
     public SaveHouseResponse save(SaveHouseRequest request, String token) {
         String role = roleValidatorPort.extractRole(token);
-        houseServicePort.save(houseDtoMapper.requestToModel(request), role);
+        Long userId = roleValidatorPort.extractUserId(token);
+
+        houseServicePort.save(houseDtoMapper.requestToModel(request), role, userId);
+
         return new SaveHouseResponse(Constants.SAVE_HOUSE_RESPONSE_MESSAGE, LocalDateTime.now());
     }
 
     @Override
-    public PagedHouseResponse listHouses(ListHousesRequest request) {
+    public PagedHouseResponse listHouses(ListHousesRequest request, String token) {
+        String role = roleValidatorPort.extractRole(token);
         var criteria = houseSearchCriteriaMapper.requestToCriteria(request);
-        PageResult<HouseModel> pageResult = houseServicePort.searchHouses(criteria);
+        criteria.setPublisherId(request.publisherId());
+        PageResult<HouseModel> pageResult = houseServicePort.searchHouses(criteria, role);
         List<HouseResponse> responses = houseDtoMapper.modelToResponseList(pageResult.getContent());
 
         return new PagedHouseResponse(
@@ -50,5 +55,10 @@ public class HouseServiceImpl implements HouseService {
                 pageResult.isFirst(),
                 pageResult.isLast()
         );
+    }
+
+    @Override
+    public Long getOwnerIdByHouseId(Long houseId) {
+        return houseServicePort.findPublisherIdById(houseId);
     }
 }
