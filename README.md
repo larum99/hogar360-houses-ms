@@ -222,7 +222,7 @@ Una vez ejecutada la aplicacion, la documentacion interactiva esta disponible en
 
 - Solo usuarios con rol **VENDEDOR** pueden crear propiedades.
 - Solo usuarios con rol **ADMIN** pueden crear categorias y ubicaciones.
-- Una propiedad debe tener minimo **1 dormitorio** y **1 bano**.
+- Una propiedad debe tener minimo **1 dormitorio** y **1 baño**.
 - El precio debe ser mayor a **0**.
 - El nombre de la propiedad mas su ubicacion deben ser **unicos** (no duplicados en la misma ubicacion).
 - La fecha de publicacion activa debe ser **hoy o dentro de maximo 30 dias**.
