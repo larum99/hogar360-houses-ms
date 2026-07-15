@@ -1,0 +1,141 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CityPersistenceAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.hogar360.houses.houses.infrastructure.adapters.persistence</a>
+</div>
+
+<h1>Coverage Summary for Class: CityPersistenceAdapter (com.hogar360.houses.houses.infrastructure.adapters.persistence)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CityPersistenceAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.hogar360.houses.houses.infrastructure.adapters.persistence;
+&nbsp;
+&nbsp;import com.hogar360.houses.houses.domain.model.CityModel;
+&nbsp;import com.hogar360.houses.houses.domain.model.DepartmentModel;
+&nbsp;import com.hogar360.houses.houses.domain.ports.out.CityPersistencePort;
+&nbsp;import com.hogar360.houses.houses.infrastructure.entities.CityEntity;
+&nbsp;import com.hogar360.houses.houses.infrastructure.entities.DepartmentEntity;
+&nbsp;import com.hogar360.houses.houses.infrastructure.mappers.CityEntityMapper;
+&nbsp;import com.hogar360.houses.houses.infrastructure.repositories.mysql.CityRepository;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+&nbsp;@Transactional
+&nbsp;@RequiredArgsConstructor
+&nbsp;public class CityPersistenceAdapter implements CityPersistencePort {
+&nbsp;    private final CityRepository cityRepository;
+&nbsp;    private final CityEntityMapper cityEntityMapper;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public CityModel getByNameAndDepartment(String name, DepartmentModel department) {
+<b class="nc">&nbsp;        DepartmentEntity departmentEntity = new DepartmentEntity();</b>
+<b class="nc">&nbsp;        departmentEntity.setId(department.getId());</b>
+<b class="nc">&nbsp;        departmentEntity.setName(department.getName());</b>
+&nbsp;
+<b class="nc">&nbsp;        return cityEntityMapper.entityToModel(cityRepository.findByNameAndDepartment(name, departmentEntity).orElse(null));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public CityModel getCityById(Long id) {
+<b class="nc">&nbsp;        Optional&lt;CityEntity&gt; cityEntityOptional = cityRepository.findById(id);</b>
+<b class="nc">&nbsp;        return cityEntityOptional.map(cityEntityMapper::entityToModel).orElse(null);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-02 21:04</div>
+</div>
+</body>
+</html>

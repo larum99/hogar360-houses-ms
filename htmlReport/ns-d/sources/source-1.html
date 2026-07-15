@@ -1,0 +1,172 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CategoryPersistenceAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.hogar360.houses.houses.infrastructure.adapters.persistence</a>
+</div>
+
+<h1>Coverage Summary for Class: CategoryPersistenceAdapter
+    (com.hogar360.houses.houses.infrastructure.adapters.persistence)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CategoryPersistenceAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.hogar360.houses.houses.infrastructure.adapters.persistence;
+&nbsp;
+&nbsp;import com.hogar360.houses.houses.domain.model.CategoryModel;
+&nbsp;import com.hogar360.houses.houses.domain.utils.PageResult;
+&nbsp;import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
+&nbsp;import com.hogar360.houses.houses.infrastructure.mappers.CategoryEntityMapper;
+&nbsp;import com.hogar360.houses.houses.infrastructure.repositories.mysql.CategoryRepository;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.data.domain.PageRequest;
+&nbsp;import org.springframework.data.domain.Pageable;
+&nbsp;import org.springframework.data.domain.Sort;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+&nbsp;@Transactional
+&nbsp;@RequiredArgsConstructor
+&nbsp;public class CategoryPersistenceAdapter implements CategoryPersistencePort {
+&nbsp;    private final CategoryRepository categoryRepository;
+&nbsp;    private final CategoryEntityMapper categoryEntityMapper;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void save(CategoryModel categoryModel) {
+<b class="nc">&nbsp;        categoryRepository.save(categoryEntityMapper.modelToEntity(categoryModel));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public CategoryModel getCategoryByName(String categoryName) {
+<b class="nc">&nbsp;        return categoryEntityMapper.entityToModel(categoryRepository.findByName(categoryName).orElse(null));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public PageModel&lt;CategoryModel&gt; listCategories(int page, int size, boolean orderAsc) {
+<b class="nc">&nbsp;        Sort sort = orderAsc ? Sort.by(&quot;name&quot;).ascending() : Sort.by(&quot;name&quot;).descending();</b>
+<b class="nc">&nbsp;        Pageable pageable = PageRequest.of(page, size, sort);</b>
+<b class="nc">&nbsp;        org.springframework.data.domain.Page&lt;com.hogar360.houses.houses.infrastructure.entities.CategoryEntity&gt; entityPage =</b>
+<b class="nc">&nbsp;                categoryRepository.findAll(pageable);</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;CategoryModel&gt; categoryModels = entityPage.getContent().stream()</b>
+<b class="nc">&nbsp;                .map(categoryEntityMapper::entityToModel)</b>
+<b class="nc">&nbsp;                .collect(java.util.stream.Collectors.toList());</b>
+&nbsp;
+<b class="nc">&nbsp;        return new PageModel&lt;&gt;(</b>
+&nbsp;                categoryModels,
+<b class="nc">&nbsp;                entityPage.getTotalElements(),</b>
+<b class="nc">&nbsp;                entityPage.getTotalPages(),</b>
+<b class="nc">&nbsp;                entityPage.getNumber(),</b>
+<b class="nc">&nbsp;                entityPage.getSize(),</b>
+<b class="nc">&nbsp;                entityPage.isFirst(),</b>
+<b class="nc">&nbsp;                entityPage.isLast()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-02 21:04</div>
+</div>
+</body>
+</html>
