@@ -17,4 +17,7 @@ public interface HouseRepository extends JpaRepository<HouseEntity, Long>, JpaSp
     @Query("SELECT h.publisherId FROM HouseEntity h WHERE h.id = :houseId")
     Long findPublisherIdById(@Param("houseId") Long houseId);
     boolean existsByNameAndLocationId(String name, Long locationId);
+    List<HouseEntity> findAllByPublisherId(Long publisherId);
+    @Query("SELECT h.id FROM HouseEntity h WHERE h.location.city.id = :cityId AND h.location.sector = :sector")
+    List<Long> findIdsByLocation_CityIdAndLocation_Sector(@Param("cityId") Long cityId, @Param("sector") String sector);
 }

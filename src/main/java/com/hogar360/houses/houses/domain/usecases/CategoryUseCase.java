@@ -8,6 +8,7 @@ import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class CategoryUseCase implements CategoryServicePort {
     private final CategoryPersistencePort categoryPersistencePort;
@@ -57,8 +58,8 @@ public class CategoryUseCase implements CategoryServicePort {
     }
 
     private void checkIfCategoryAlreadyExists(String name) {
-        CategoryModel existingCategory = categoryPersistencePort.getCategoryByName(name);
-        if (existingCategory != null) {
+        Optional<CategoryModel> existingCategory = categoryPersistencePort.getCategoryByName(name);
+        if (existingCategory.isPresent()) {
             throw new CategoryAlreadyExistsException();
         }
     }

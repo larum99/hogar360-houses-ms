@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-// @Table(name = "categories")  // Agrega esta anotación si se quiere una tabla con nombre específico.
+// @Table(name = "categories")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

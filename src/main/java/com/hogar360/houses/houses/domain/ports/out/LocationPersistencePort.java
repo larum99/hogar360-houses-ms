@@ -10,6 +10,6 @@ public interface LocationPersistencePort {
     LocationModel save(LocationModel locationModel);
     PageResult<LocationModel> searchLocations(String searchTerm, int page, int size, String sortBy, String sortDirection);
     Optional<LocationModel> findById(Long id);
-    LocationModel getBySectorAndCityId(String sector, Long cityId);
+    Optional<LocationModel> getBySectorAndCityId(String sector, Long cityId);
     List<LocationModel> findByCityId(Long cityId);
 }

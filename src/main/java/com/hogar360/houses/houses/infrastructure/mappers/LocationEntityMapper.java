@@ -13,5 +13,4 @@ public interface LocationEntityMapper {
     LocationEntity modelToEntity(LocationModel locationModel);
     LocationModel entityToModel(LocationEntity locationEntity);
     List<LocationModel> entityToModelList(List<LocationEntity> entities);
-
 }

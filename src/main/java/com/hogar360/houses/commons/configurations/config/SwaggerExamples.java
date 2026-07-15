@@ -113,7 +113,7 @@ public class SwaggerExamples {
 
     public static final String SAVE_HOUSE_REQUEST = """
     {
-      "name": "Casa Narnia",
+      "name": "Casa Campestre",
       "description": "Hermosa casa de ensueño frente a las montañas con excelente vista",
       "categoryId": 1,
       "bedrooms": 3,
@@ -144,7 +144,7 @@ public class SwaggerExamples {
           "content": [
             {
               "id": 1,
-              "name": "Casa Narnia",
+              "name": "Casa Campestre",
               "description": "Hermosa casa frente a las montañas",
               "price": 350000.00,
               "location": {

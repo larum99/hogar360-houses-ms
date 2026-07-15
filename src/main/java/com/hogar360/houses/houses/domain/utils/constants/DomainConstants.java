@@ -41,6 +41,5 @@ public class DomainConstants {
 
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String ROLE_SELLER = "VENDEDOR";
-
-
+    public static final String ROLE_ANONYMOUS = "ANONYMOUS";
 }

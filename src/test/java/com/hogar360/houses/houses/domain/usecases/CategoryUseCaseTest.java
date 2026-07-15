@@ -2,7 +2,6 @@ package com.hogar360.houses.houses.domain.usecases;
 
 import com.hogar360.houses.houses.domain.exceptions.*;
 import com.hogar360.houses.houses.domain.model.CategoryModel;
-import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import com.hogar360.houses.houses.domain.utils.PageResult;
 import com.hogar360.houses.houses.domain.ports.out.CategoryPersistencePort;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
@@ -15,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -25,98 +25,82 @@ class CategoryUseCaseTest {
     @Mock
     private CategoryPersistencePort categoryPersistencePort;
 
-    @Mock
-    private RoleValidatorPort roleValidatorPort;
-
     @InjectMocks
     private CategoryUseCase categoryUseCase;
 
     private CategoryModel categoryModel;
-    private String adminToken;
-    private String userToken;
+    private String adminRole;
+    private String userRole;
 
     @BeforeEach
     void setUp() {
         categoryModel = new CategoryModel();
         categoryModel.setName("Test Category");
         categoryModel.setDescription("Test Description");
-        adminToken = "validAdminToken";
-        userToken = "invalidUserToken";
+        adminRole = DomainConstants.ROLE_ADMIN;
+        userRole = "USER";
     }
 
     @Test
     void save_shouldSaveCategory_whenCategoryDoesNotExistAndRoleIsAdmin() {
-        when(roleValidatorPort.extractRole(adminToken)).thenReturn(DomainConstants.ROLE_ADMIN);
-        when(categoryPersistencePort.getCategoryByName(categoryModel.getName())).thenReturn(null);
+        when(categoryPersistencePort.getCategoryByName(categoryModel.getName())).thenReturn(Optional.empty());
 
-        categoryUseCase.save(categoryModel, adminToken);
+        categoryUseCase.save(categoryModel, adminRole);
 
-        verify(roleValidatorPort, times(1)).extractRole(adminToken);
         verify(categoryPersistencePort, times(1)).getCategoryByName(categoryModel.getName());
         verify(categoryPersistencePort, times(1)).save(categoryModel);
     }
 
     @Test
     void save_shouldThrowForbiddenException_whenRoleIsNotAdmin() {
-        when(roleValidatorPort.extractRole(userToken)).thenReturn("USER");
+        assertThrows(ForbiddenException.class, () -> categoryUseCase.save(categoryModel, userRole));
 
-        assertThrows(ForbiddenException.class, () -> categoryUseCase.save(categoryModel, userToken));
-
-        verify(roleValidatorPort, times(1)).extractRole(userToken);
         verify(categoryPersistencePort, never()).getCategoryByName(any());
         verify(categoryPersistencePort, never()).save(any());
     }
 
     @Test
     void save_shouldThrowCategoryAlreadyExistsException_whenCategoryAlreadyExistsAndRoleIsAdmin() {
-        when(roleValidatorPort.extractRole(adminToken)).thenReturn(DomainConstants.ROLE_ADMIN);
-        when(categoryPersistencePort.getCategoryByName(categoryModel.getName())).thenReturn(categoryModel);
+        when(categoryPersistencePort.getCategoryByName(categoryModel.getName()))
+                .thenReturn(Optional.of(categoryModel));
+        assertThrows(CategoryAlreadyExistsException.class, () -> categoryUseCase.save(categoryModel, adminRole));
 
-        assertThrows(CategoryAlreadyExistsException.class, () -> categoryUseCase.save(categoryModel, adminToken));
-
-        verify(roleValidatorPort, times(1)).extractRole(adminToken);
         verify(categoryPersistencePort, times(1)).getCategoryByName(categoryModel.getName());
         verify(categoryPersistencePort, never()).save(any());
     }
 
     @Test
     void save_shouldThrowNullPointerException_whenNameIsNullAndRoleIsAdmin() {
-        when(roleValidatorPort.extractRole(adminToken)).thenReturn(DomainConstants.ROLE_ADMIN);
         categoryModel.setName(null);
-        assertThrows(NullPointerException.class, () -> categoryUseCase.save(categoryModel, adminToken));
-        verify(roleValidatorPort, times(1)).extractRole(adminToken);
+        Exception exception = assertThrows(NullPointerException.class, () -> categoryUseCase.save(categoryModel, adminRole));
+        assertEquals(DomainConstants.FIELD_NAME_NULL_MESSAGE, exception.getMessage());
         verify(categoryPersistencePort, never()).getCategoryByName(any());
         verify(categoryPersistencePort, never()).save(any());
     }
 
     @Test
     void save_shouldThrowNullPointerException_whenDescriptionIsNullAndRoleIsAdmin() {
-        when(roleValidatorPort.extractRole(adminToken)).thenReturn(DomainConstants.ROLE_ADMIN);
         categoryModel.setDescription(null);
-        assertThrows(NullPointerException.class, () -> categoryUseCase.save(categoryModel, adminToken));
-        verify(roleValidatorPort, times(1)).extractRole(adminToken);
+        Exception exception = assertThrows(NullPointerException.class, () -> categoryUseCase.save(categoryModel, adminRole));
+        assertEquals(DomainConstants.FIELD_DESCRIPTION_NULL_MESSAGE, exception.getMessage());
         verify(categoryPersistencePort, never()).getCategoryByName(any());
         verify(categoryPersistencePort, never()).save(any());
     }
 
     @Test
     void save_shouldThrowCategoryNameMaxSizeExceededException_whenNameExceedsMaxLengthAndRoleIsAdmin() {
-        when(roleValidatorPort.extractRole(adminToken)).thenReturn(DomainConstants.ROLE_ADMIN);
         String longName = "a".repeat(DomainConstants.MAX_CATEGORY_NAME_LENGTH + 1);
         categoryModel.setName(longName);
-        assertThrows(CategoryNameMaxSizeExceededException.class, () -> categoryUseCase.save(categoryModel, adminToken));
-        verify(roleValidatorPort, times(1)).extractRole(adminToken);
+        assertThrows(CategoryNameMaxSizeExceededException.class, () -> categoryUseCase.save(categoryModel, adminRole));
         verify(categoryPersistencePort, never()).getCategoryByName(any());
         verify(categoryPersistencePort, never()).save(any());
     }
 
     @Test
     void save_shouldThrowCategoryDescriptionMaxSizeExceededException_whenDescriptionExceedsMaxLengthAndRoleIsAdmin() {
-        when(roleValidatorPort.extractRole(adminToken)).thenReturn(DomainConstants.ROLE_ADMIN);
         String longDescription = "a".repeat(DomainConstants.MAX_CATEGORY_DESCRIPTION_LENGTH + 1);
         categoryModel.setDescription(longDescription);
-        assertThrows(CategoryDescriptionMaxSizeExceededException.class, () -> categoryUseCase.save(categoryModel, adminToken));
-        verify(roleValidatorPort, times(1)).extractRole(adminToken);
+        assertThrows(CategoryDescriptionMaxSizeExceededException.class, () -> categoryUseCase.save(categoryModel, adminRole));
         verify(categoryPersistencePort, never()).getCategoryByName(any());
         verify(categoryPersistencePort, never()).save(any());
     }
@@ -159,9 +143,8 @@ class CategoryUseCaseTest {
         verify(categoryPersistencePort, times(1)).listCategories(page, size, orderAsc);
     }
 
-
     @Test
-    void listCategories_shouldThrowException_whenPageIsNegative() {
+    void listCategories_shouldThrowPageNumberNegativeException_whenPageIsNegative() {
         int page = -1;
         int size = 10;
         boolean orderAsc = true;
@@ -170,7 +153,7 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    void listCategories_shouldThrowException_whenSizeIsInvalid() {
+    void listCategories_shouldThrowPageSizeInvalidException_whenSizeIsInvalid() {
         int page = 0;
         int size = DomainConstants.DEFAULT_SIZE_NUMBER;
         boolean orderAsc = true;

@@ -1,11 +1,14 @@
 package com.hogar360.houses.houses.infrastructure.endpoints.rest;
 
 import com.hogar360.houses.commons.configurations.config.ControllerConstants;
+import com.hogar360.houses.commons.configurations.config.HouseControllerDocs.*;
 import com.hogar360.houses.commons.configurations.config.HouseControllerDocs.SaveHouseDoc;
 import com.hogar360.houses.commons.configurations.config.HouseControllerDocs.SearchHousesDoc;
 import com.hogar360.houses.commons.configurations.config.SwaggerExamples;
 import com.hogar360.houses.houses.application.dto.request.ListHousesRequest;
 import com.hogar360.houses.houses.application.dto.request.SaveHouseRequest;
+import com.hogar360.houses.houses.application.dto.response.HouseResponse;
+import com.hogar360.houses.houses.application.dto.response.HouseSimpleResponse;
 import com.hogar360.houses.houses.application.dto.response.PagedHouseResponse;
 import com.hogar360.houses.houses.application.dto.response.SaveHouseResponse;
 import com.hogar360.houses.houses.application.services.HouseService;
@@ -19,23 +22,26 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import static com.hogar360.houses.commons.configurations.config.ControllerConstants.BEARER_PREFIX;
 
 @RestController
-@RequestMapping(ControllerConstants.BASE_URL)
+@RequestMapping(ControllerConstants.BASE_URL_HOUSES)
 @RequiredArgsConstructor
-@Tag(name = ControllerConstants.TAG, description = ControllerConstants.TAG_DESCRIPTION)
+@Tag(name = ControllerConstants.TAG_HOUSES, description = ControllerConstants.TAG_DESCRIPTION_HOUSES)
 public class HouseController {
 
     private final HouseService houseService;
 
     @SaveHouseDoc
-    @PreAuthorize("hasRole('VENDEDOR')")
-    @PostMapping(ControllerConstants.SAVE_PATH)
+    @PreAuthorize(ControllerConstants.ROLE_SELLER)
+    @PostMapping(ControllerConstants.PATH)
     public ResponseEntity<SaveHouseResponse> save(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
             @RequestBody SaveHouseRequest saveHouseRequest) {
 
-        String token = authorizationHeader.replace("Bearer ", "");
+        String token = authorizationHeader.replace(BEARER_PREFIX, "");
         SaveHouseResponse response = houseService.save(saveHouseRequest, token);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -44,7 +50,7 @@ public class HouseController {
     @SearchHousesDoc
     @GetMapping(ControllerConstants.SEARCH_PATH)
     public ResponseEntity<PagedHouseResponse> search(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @Parameter(description = SwaggerExamples.HOUSE_DEPARTMENT_DESCRIPTION, example = SwaggerExamples.HOUSE_DEPARTMENT_EXAMPLE)
             @RequestParam(required = false) String department,
             @Parameter(description = SwaggerExamples.HOUSE_CITY_DESCRIPTION, example = SwaggerExamples.HOUSE_CITY_EXAMPLE)
@@ -74,15 +80,44 @@ public class HouseController {
                 department, city, sector, category, bedrooms, bathrooms,
                 price, sortBy, sortDirection, page, size, publisherId
         );
-        String token = authorizationHeader.replace("Bearer ", "");
+        String token = null;
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
+            token = authorizationHeader.replace(BEARER_PREFIX, "");
+        }
         PagedHouseResponse response = houseService.listHouses(request, token);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/{houseId}/owner")
+    @GetHouseOwnerDoc
+    @GetMapping(ControllerConstants.GET_OWNER_PATH)
     public ResponseEntity<Long> getHouseOwner(@PathVariable Long houseId) {
-
         Long ownerId = houseService.getOwnerIdByHouseId(houseId);
-        return ResponseEntity.ok(ownerId);
+        return ResponseEntity.status(HttpStatus.OK).body(ownerId);
+    }
+
+    @GetHousesByPublisherDoc
+    @GetMapping(ControllerConstants.GET_BY_PUBLISHER_PATH)
+    public ResponseEntity<List<HouseResponse>> getHousesByPublisher(
+            @PathVariable Long publisherId) {
+
+        List<HouseResponse> houses = houseService.listHousesByPublisherId(publisherId);
+        return ResponseEntity.status(HttpStatus.OK).body(houses);
+    }
+
+    @GetHouseIdsByLocationDoc
+    @GetMapping(ControllerConstants.GET_IDS_BY_LOCATION_PATH)
+    public ResponseEntity<List<Long>> getHouseIdsByLocation(
+            @RequestParam Long cityId,
+            @RequestParam String sector
+    ) {
+        List<Long> houseIds = houseService.getHouseIdsByLocation(cityId, sector);
+        return ResponseEntity.status(HttpStatus.OK).body(houseIds);
+    }
+
+    @GetHouseByIdDoc
+    @GetMapping(ControllerConstants.GET_BY_ID_PATH)
+    public ResponseEntity<HouseSimpleResponse> getHouseById(@PathVariable Long houseId) {
+        HouseSimpleResponse response = houseService.getHouseById(houseId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

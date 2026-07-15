@@ -32,8 +32,14 @@ public class CategoryPersistenceAdapter implements CategoryPersistencePort {
     }
 
     @Override
-    public CategoryModel getCategoryByName(String categoryName) {
-        return categoryEntityMapper.entityToModel(categoryRepository.findByName(categoryName).orElse(null));
+    public Optional<CategoryModel> getCategoryByName(String categoryName) {
+        Optional<CategoryEntity> entityOptional = categoryRepository.findByName(categoryName);
+        if (entityOptional.isPresent()) {
+            CategoryModel model = categoryEntityMapper.entityToModel(entityOptional.get());
+            return Optional.of(model);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override

@@ -46,16 +46,26 @@ public class LocationPersistenceAdapter implements LocationPersistencePort {
 
     @Override
     public Optional<LocationModel> findById(Long id) {
-        LocationEntity entity = locationRepository.findById(id).orElse(null);
-        LocationModel model = locationEntityMapper.entityToModel(entity);
-        return Optional.ofNullable(model);
+        Optional<LocationEntity> optionalEntity = locationRepository.findById(id);
+        if (optionalEntity.isPresent()) {
+            LocationEntity entity = optionalEntity.get();
+            LocationModel model = locationEntityMapper.entityToModel(entity);
+            return Optional.of(model);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public LocationModel getBySectorAndCityId(String sector, Long cityId) {
-        return locationEntityMapper.entityToModel(
-                locationRepository.findBySectorAndCityId(sector, cityId).orElse(null)
-        );
+    public Optional<LocationModel> getBySectorAndCityId(String sector, Long cityId) {
+        Optional<LocationEntity> optionalEntity = locationRepository.findBySectorAndCityId(sector, cityId);
+        if (optionalEntity.isPresent()) {
+            LocationEntity entity = optionalEntity.get();
+            LocationModel model = locationEntityMapper.entityToModel(entity);
+            return Optional.of(model);
+        } else {
+            return Optional.empty();
+        }
     }
 
     private PageResult<LocationModel> convertToPageModel(Page<LocationEntity> entityPage) {

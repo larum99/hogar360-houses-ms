@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -21,9 +22,10 @@ public class CityPersistenceAdapter implements CityPersistencePort {
     private final CityEntityMapper cityEntityMapper;
 
     @Override
-    public CityModel getCityById(Long id) {
+    public Optional<CityModel> getCityById(Long id) {
         CityEntity cityEntity = cityRepository.findById(id).orElse(null);
-        return cityEntityMapper.entityToModel(cityEntity);
+        CityModel cityModel = cityEntityMapper.entityToModel(cityEntity);
+        return Optional.ofNullable(cityModel);
     }
 
     @Override

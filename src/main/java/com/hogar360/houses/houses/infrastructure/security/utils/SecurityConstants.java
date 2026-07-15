@@ -4,7 +4,8 @@ import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
-public class SecurityConstants {
+public class
+SecurityConstants {
 
     private SecurityConstants() {
         throw new IllegalStateException("Utility class");
@@ -34,12 +35,14 @@ public class SecurityConstants {
             "/api/v1/house/{houseId}/owner",
             "/api/v1/city/department/{departmentId}",
             "/api/v1/department",
-            "/api/v1/location/city/**"
+            "/api/v1/location/city/**",
+            "/api/v1/house/publisher/{publisherId}",
+            "/api/v1/house/search",
+            "/api/v1/house/search-ids-by-location",
+            "/api/v1/house/**"
     );
 
     public static final String CATEGORY_PROTECTED_PATH = "/api/v1/category/";
     public static final String LOCATION_PROTECTED_PATH = "/api/v1/location/";
     public static final String HOUSE_PROTECTED_PATH = "/api/v1/house/";
-    public static final String HOUSE_PROTECTED_PATH_LIST_ALL = "/api/v1/house/search";
-
 }

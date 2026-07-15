@@ -1,10 +1,13 @@
 package com.hogar360.houses.commons.configurations.config;
 
 import com.hogar360.houses.houses.application.dto.request.SaveHouseRequest;
+import com.hogar360.houses.houses.application.dto.response.HouseResponse;
+import com.hogar360.houses.houses.application.dto.response.HouseSimpleResponse;
 import com.hogar360.houses.houses.application.dto.response.PagedHouseResponse;
 import com.hogar360.houses.houses.application.dto.response.SaveHouseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -105,13 +108,8 @@ public class HouseControllerDocs {
                             example = "Casa"
                     ),
                     @Parameter(
-                            name = "minPrice",
-                            description = "Precio mínimo de la propiedad",
-                            example = "100000"
-                    ),
-                    @Parameter(
-                            name = "maxPrice",
-                            description = "Precio máximo de la propiedad",
+                            name = "price",
+                            description = "Precio máximo de la propiedad (las propiedades deben tener un precio menor o igual)",
                             example = "500000"
                     ),
                     @Parameter(
@@ -181,4 +179,88 @@ public class HouseControllerDocs {
             )
     })
     public @interface SearchHousesDoc {}
+
+    @Target({ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Operation(
+            summary = "Obtener propietario de una casa",
+            description = "Retorna el ID del propietario asociado a la casa especificada por su ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "ID del propietario encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Long.class),
+                            examples = @ExampleObject(
+                                    name = "ID propietario",
+                                    summary = "Ejemplo de ID devuelto",
+                                    description = "ID del propietario de la casa",
+                                    value = "12345"
+                            )
+                    )
+            )
+    })
+    public @interface GetHouseOwnerDoc {}
+
+    @Target({ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Operation(
+            summary = "Listar casas por ID de publicador",
+            description = "Devuelve una lista de casas asociadas al ID del publicador especificado."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de casas encontradas",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = HouseResponse.class))
+                    )
+            )
+    })
+    public @interface GetHousesByPublisherDoc {}
+
+    @Target({ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Operation(
+            summary = "Buscar IDs de casas por ciudad y sector",
+            description = "Devuelve una lista de IDs de casas que se encuentran en una ciudad y sector específicos."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de IDs de casas encontrada",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Long.class)),
+                            examples = @ExampleObject(
+                                    name = "Lista de IDs",
+                                    summary = "Ejemplo de IDs de casas",
+                                    value = "[101, 102, 103]"
+                            )
+                    )
+            )
+    })
+    public @interface GetHouseIdsByLocationDoc {}
+
+    @Target({ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Operation(
+            summary = "Obtener casa por ID",
+            description = "Devuelve la información básica de una casa dado su ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Casa encontrada",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = HouseSimpleResponse.class)
+                    )
+            )
+    })
+    public @interface GetHouseByIdDoc {}
+
 }

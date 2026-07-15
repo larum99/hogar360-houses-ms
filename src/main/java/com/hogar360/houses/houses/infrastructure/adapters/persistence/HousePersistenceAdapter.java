@@ -83,4 +83,21 @@ public class HousePersistenceAdapter implements HousePersistencePort {
     public boolean existsByNameAndLocationId(String name, Long locationId) {
         return houseRepository.existsByNameAndLocationId(name, locationId);
     }
+
+    @Override
+    public List<HouseModel> findAllByPublisherId(Long publisherId) {
+        List<HouseEntity> entities = houseRepository.findAllByPublisherId(publisherId);
+        return houseEntityMapper.entityListToModelList(entities);
+    }
+
+    @Override
+    public List<Long> findIdsByCityIdAndSector(Long cityId, String sector) {
+        return houseRepository.findIdsByLocation_CityIdAndLocation_Sector(cityId, sector);
+    }
+
+    @Override
+    public HouseModel findById(Long houseId) {
+        HouseEntity entity = houseRepository.findById(houseId).orElse(null);
+        return houseEntityMapper.entityToModel(entity);
+    }
 }

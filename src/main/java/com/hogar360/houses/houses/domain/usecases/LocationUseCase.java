@@ -10,6 +10,7 @@ import com.hogar360.houses.houses.domain.ports.out.LocationPersistencePort;
 import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 
 import java.util.List;
+import java.util.Optional;
 
 public class LocationUseCase implements LocationServicePort {
     private final CityPersistencePort cityPersistencePort;
@@ -54,11 +55,8 @@ public class LocationUseCase implements LocationServicePort {
     }
 
     private CityModel validateAndGetCity(Long cityId) {
-        CityModel city = cityPersistencePort.getCityById(cityId);
-        if (city == null) {
-            throw new CityNotFoundException();
-        }
-        return city;
+        return cityPersistencePort.getCityById(cityId)
+                .orElseThrow(CityNotFoundException::new);
     }
 
     private void validateSectorLength(String sector) {
@@ -68,8 +66,8 @@ public class LocationUseCase implements LocationServicePort {
     }
 
     private void checkIfSectorAlreadyExists(String sector, Long cityId) {
-        LocationModel existingLocation = locationPersistencePort.getBySectorAndCityId(sector, cityId);
-        if (existingLocation != null) {
+        Optional<LocationModel> existingLocation = locationPersistencePort.getBySectorAndCityId(sector, cityId);
+        if (existingLocation.isPresent()) {
             throw new LocationAlreadyExistsException();
         }
     }

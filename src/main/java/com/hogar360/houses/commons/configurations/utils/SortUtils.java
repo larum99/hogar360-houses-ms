@@ -13,6 +13,8 @@ public class SortUtils {
             sortBy = "id";
         }
 
+        sortBy = mapNestedFields(sortBy);
+
         Sort sort = Sort.by(sortBy);
         if ("desc".equalsIgnoreCase(sortDirection)) {
             sort = sort.descending();
@@ -28,6 +30,17 @@ public class SortUtils {
             sortBy = "id";
         }
 
+        sortBy = mapNestedFields(sortBy);
+
         return orderAsc ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+    }
+
+    private static String mapNestedFields(String sortBy) {
+        return switch (sortBy.toLowerCase()) {
+            case "category" -> "category.name";
+            case "city" -> "location.city.cityName";
+            case "department" -> "location.city.department.departmentName";
+            default -> sortBy;
+        };
     }
 }

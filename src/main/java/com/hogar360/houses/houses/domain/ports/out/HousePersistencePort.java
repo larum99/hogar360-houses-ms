@@ -6,6 +6,7 @@ import com.hogar360.houses.houses.domain.utils.PageResult;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface HousePersistencePort {
     void save(HouseModel houseModel);
@@ -14,4 +15,7 @@ public interface HousePersistencePort {
 
     Long findPublisherIdById(Long houseId);
     boolean existsByNameAndLocationId(String name, Long locationId);
+    List<HouseModel> findAllByPublisherId(Long publisherId);
+    List<Long> findIdsByCityIdAndSector(Long cityId, String sector);
+    HouseModel findById(Long houseId);
 }

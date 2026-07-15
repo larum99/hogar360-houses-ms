@@ -53,16 +53,22 @@ public class HouseUseCase implements HouseServicePort {
     }
 
     @Override
-    public PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria, String role) {
+    public PageResult<HouseModel> searchHouses(HouseSearchCriteria criteria, String role, Long userId) {
         validatePageNumber(criteria.getPage());
         validatePageSize(criteria.getSize());
         validateSearchCriteria(criteria);
 
         if (DomainConstants.ROLE_ADMIN.equals(role)) {
             criteria.setStatus(null);
+        } else if (DomainConstants.ROLE_ANONYMOUS.equals(role)) {
+            criteria.setStatus(PublicationStatus.PUBLISHED);
+        } else if (DomainConstants.ROLE_SELLER.equals(role)) {
+            criteria.setStatus(null);
+            criteria.setPublisherId(userId);
         } else {
             criteria.setStatus(PublicationStatus.PUBLISHED);
         }
+
         return housePersistencePort.search(criteria);
     }
 
@@ -75,6 +81,11 @@ public class HouseUseCase implements HouseServicePort {
         if (!DomainConstants.ROLE_SELLER.equals(role)) {
             throw new ForbiddenException();
         }
+    }
+
+    @Override
+    public HouseModel findById(Long houseId) {
+        return housePersistencePort.findById(houseId);
     }
 
     private void validateRequiredFields(HouseModel houseModel) {
@@ -176,5 +187,15 @@ public class HouseUseCase implements HouseServicePort {
         if (exists) {
             throw new HouseAlreadyExistsException();
         }
+    }
+
+    @Override
+    public List<HouseModel> findAllByPublisherId(Long publisherId) {
+        return housePersistencePort.findAllByPublisherId(publisherId);
+    }
+
+    @Override
+    public List<Long> findIdsByCityIdAndSector(Long cityId, String sector) {
+        return housePersistencePort.findIdsByCityIdAndSector(cityId, sector);
     }
 }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CategoryPersistencePort {
     void save(CategoryModel categoryModel);
-    CategoryModel getCategoryByName(String categoryName);
+    Optional<CategoryModel> getCategoryByName(String categoryName);
     PageResult<CategoryModel> listCategories(int page, int size, boolean orderAsc);
     Optional<CategoryModel> findById(Long id);
 }
