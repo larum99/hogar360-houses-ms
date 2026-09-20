@@ -14,7 +14,9 @@ import com.hogar360.houses.houses.domain.ports.in.HouseServicePort;
 import com.hogar360.houses.houses.domain.ports.in.RoleValidatorPort;
 import com.hogar360.houses.houses.domain.utils.PageResult;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,7 +69,11 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public Long getOwnerIdByHouseId(Long houseId) {
-        return houseServicePort.findPublisherIdById(houseId);
+        Long ownerId = houseServicePort.findPublisherIdById(houseId);
+        if (ownerId == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "House not found with id: " + houseId);
+        }
+        return ownerId;
     }
 
     @Override
@@ -84,11 +90,14 @@ public class HouseServiceImpl implements HouseService {
     @Override
     public HouseSimpleResponse getHouseById(Long houseId) {
         HouseModel houseModel = houseServicePort.findById(houseId);
+        if (houseModel == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "House not found with id: " + houseId);
+        }
         LocationModel locationModel = houseModel.getLocation();
         LocationResponse locationResponse = null;
         if (locationModel != null) {
             locationResponse = locationDtoMapper.modelToResponse(locationModel);
         }
-        return new HouseSimpleResponse(houseModel.getId(), houseModel.getName(), locationResponse);
+        return new HouseSimpleResponse(houseModel.getId(), houseModel.getName(), locationResponse, houseModel.getStatus(), houseModel.getPublisherId());
     }
 }
