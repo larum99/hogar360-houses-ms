@@ -1,6 +1,7 @@
 package com.hogar360.houses.houses.domain.utils.constants;
 
 import java.math.BigDecimal;
+import java.time.ZoneId;
 
 public class DomainConstants {
 
@@ -8,6 +9,7 @@ public class DomainConstants {
         throw new IllegalStateException("Utility class");
     }
 
+    public static final ZoneId PUBLICATION_ZONE_ID = ZoneId.of("America/Bogota");
 
     public static final String FIELD_NAME_NULL_MESSAGE = "Field 'name' cannot be null";
     public static final String FIELD_DESCRIPTION_NULL_MESSAGE = "Field 'description' cannot be null";

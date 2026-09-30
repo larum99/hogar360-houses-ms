@@ -4,6 +4,7 @@ import com.hogar360.houses.commons.configurations.utils.LogMessages;
 import com.hogar360.houses.houses.domain.model.HouseModel;
 import com.hogar360.houses.houses.domain.ports.out.HousePersistencePort;
 import com.hogar360.houses.houses.domain.utils.PublicationStatus;
+import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,14 +31,14 @@ public class HousePublicationScheduler {
         publishPendingHouses();
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?", zone = "America/Bogota")
     public void publishHousesScheduled() {
         logger.info(LogMessages.CHECK_PENDING_PUBLICATIONS_SCHEDULED);
         publishPendingHouses();
     }
 
     private void publishPendingHouses() {
-        List<HouseModel> housesToPublish = housePersistencePort.findAllPendingToPublish(LocalDate.now());
+        List<HouseModel> housesToPublish = housePersistencePort.findAllPendingToPublish(LocalDate.now(DomainConstants.PUBLICATION_ZONE_ID));
 
         if (housesToPublish.isEmpty()) {
             logger.info(LogMessages.NO_HOUSES_PENDING_TO_PUBLISH);

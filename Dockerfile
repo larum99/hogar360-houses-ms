@@ -19,8 +19,10 @@ FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
+ENV TZ=America/Bogota
+
 COPY --from=builder /app/build/libs/*.jar app.jar
 
 EXPOSE 8090
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Duser.timezone=America/Bogota", "-jar", "app.jar"]

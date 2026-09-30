@@ -4,6 +4,7 @@ import com.hogar360.houses.houses.domain.criteria.HouseSearchCriteria;
 import com.hogar360.houses.houses.domain.model.HouseModel;
 import com.hogar360.houses.houses.domain.ports.out.HousePersistencePort;
 import com.hogar360.houses.houses.domain.utils.PageResult;
+import com.hogar360.houses.houses.domain.utils.constants.DomainConstants;
 import com.hogar360.houses.houses.domain.utils.PublicationStatus;
 import com.hogar360.houses.houses.infrastructure.entities.HouseEntity;
 import com.hogar360.houses.houses.infrastructure.mappers.HouseEntityMapper;
@@ -37,7 +38,7 @@ public class HousePersistenceAdapter implements HousePersistencePort {
     @Override
     public List<HouseModel> findAllPendingToPublish(LocalDate today) {
         return houseEntityMapper.entityListToModelList(
-                houseRepository.findByActivePublicationDateLessThanEqualAndStatusNot(today, PublicationStatus.PUBLISHED)
+                houseRepository.findByActivePublicationDateLessThanEqualAndStatus(today, PublicationStatus.PAUSED)
         );
     }
 
@@ -45,6 +46,9 @@ public class HousePersistenceAdapter implements HousePersistencePort {
     public PageResult<HouseModel> search(HouseSearchCriteria criteria) {
         Sort sort = createSort(criteria.getSortBy(), "asc".equalsIgnoreCase(criteria.getSortDirection()));
         Pageable pageable = PageRequest.of(criteria.getPage(), criteria.getSize(), sort);
+        LocalDate visibleDate = PublicationStatus.PUBLISHED.equals(criteria.getStatus())
+                ? LocalDate.now(DomainConstants.PUBLICATION_ZONE_ID)
+                : null;
         var spec = HouseSpecification.hasSector(criteria.getSector())
                 .and(HouseSpecification.hasCity(criteria.getCity()))
                 .and(HouseSpecification.hasDepartment(criteria.getDepartment()))
@@ -57,7 +61,8 @@ public class HousePersistenceAdapter implements HousePersistencePort {
                         criteria.getMaxPrice()
                 ))
                 .and(HouseSpecification.hasPublisher(criteria.getPublisherId()))
-                .and(HouseSpecification.hasStatus(criteria.getStatus()));
+                .and(HouseSpecification.hasStatus(criteria.getStatus()))
+                .and(HouseSpecification.hasActivePublicationDateLessThanEqual(visibleDate));
 
         Page<HouseEntity> page = houseRepository.findAll(spec, pageable);
 
@@ -92,7 +97,7 @@ public class HousePersistenceAdapter implements HousePersistencePort {
 
     @Override
     public List<Long> findIdsByCityIdAndSector(Long cityId, String sector) {
-        return houseRepository.findIdsByLocation_CityIdAndLocation_Sector(cityId, sector);
+        return houseRepository.findIdsByLocation_CityIdAndLocation_Sector(cityId, sector, LocalDate.now(DomainConstants.PUBLICATION_ZONE_ID));
     }
 
     @Override

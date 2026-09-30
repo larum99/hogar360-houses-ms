@@ -5,6 +5,7 @@ import com.hogar360.houses.houses.domain.utils.PublicationStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class HouseSpecification {
 
@@ -74,5 +75,11 @@ public class HouseSpecification {
         return (root, query, criteriaBuilder) ->
                 publisherId == null ? criteriaBuilder.conjunction() :
                         criteriaBuilder.equal(root.get(SpecificationsConstansts.PUBLISHER_ID), publisherId);
+    }
+
+    public static Specification<HouseEntity> hasActivePublicationDateLessThanEqual(LocalDate date) {
+        return (root, query, criteriaBuilder) ->
+                date == null ? criteriaBuilder.conjunction() :
+                        criteriaBuilder.lessThanOrEqualTo(root.get(SpecificationsConstansts.ACTIVE_PUBLICATION_DATE), date);
     }
 }

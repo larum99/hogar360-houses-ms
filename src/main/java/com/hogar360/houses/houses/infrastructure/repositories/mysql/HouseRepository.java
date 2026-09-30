@@ -13,11 +13,11 @@ import java.util.List;
 
 @Repository
 public interface HouseRepository extends JpaRepository<HouseEntity, Long>, JpaSpecificationExecutor<HouseEntity> {
-    List<HouseEntity> findByActivePublicationDateLessThanEqualAndStatusNot(LocalDate date, PublicationStatus status);
+    List<HouseEntity> findByActivePublicationDateLessThanEqualAndStatus(LocalDate date, PublicationStatus status);
     @Query("SELECT h.publisherId FROM HouseEntity h WHERE h.id = :houseId")
     Long findPublisherIdById(@Param("houseId") Long houseId);
     boolean existsByNameAndLocationId(String name, Long locationId);
     List<HouseEntity> findAllByPublisherId(Long publisherId);
-    @Query("SELECT h.id FROM HouseEntity h WHERE h.location.city.id = :cityId AND h.location.sector = :sector")
-    List<Long> findIdsByLocation_CityIdAndLocation_Sector(@Param("cityId") Long cityId, @Param("sector") String sector);
+    @Query("SELECT h.id FROM HouseEntity h WHERE h.location.city.id = :cityId AND h.location.sector = :sector AND h.status = 'PUBLISHED' AND h.activePublicationDate <= :today")
+    List<Long> findIdsByLocation_CityIdAndLocation_Sector(@Param("cityId") Long cityId, @Param("sector") String sector, @Param("today") LocalDate today);
 }

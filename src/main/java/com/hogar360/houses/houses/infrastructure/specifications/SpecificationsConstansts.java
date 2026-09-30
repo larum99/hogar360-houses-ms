@@ -19,4 +19,5 @@ public final class SpecificationsConstansts {
     public static final String PRICE = "price";
     public static final String STATUS = "status";
     public static final String PUBLISHER_ID = "publisherId";
+    public static final String ACTIVE_PUBLICATION_DATE = "activePublicationDate";
 }

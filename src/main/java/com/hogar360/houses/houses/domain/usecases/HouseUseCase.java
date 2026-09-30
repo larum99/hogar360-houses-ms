@@ -44,7 +44,7 @@ public class HouseUseCase implements HouseServicePort {
 
         PublicationStatus status = determineInitialStatus(houseModel.getActivePublicationDate());
         houseModel.setStatus(status);
-        houseModel.setPublicationDate(LocalDate.now());
+        houseModel.setPublicationDate(LocalDate.now(DomainConstants.PUBLICATION_ZONE_ID));
 
         houseModel.setPublisherId(userId);
 
@@ -110,7 +110,7 @@ public class HouseUseCase implements HouseServicePort {
     }
 
     private void validateActivePublicationDate(LocalDate activePublicationDate) {
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(DomainConstants.PUBLICATION_ZONE_ID);
         if (activePublicationDate.isBefore(today) ||
                 ChronoUnit.DAYS.between(today, activePublicationDate) > DomainConstants.MAX_PUBLICATION_DAYS) {
             throw new InvalidPublicationDateException();
@@ -128,7 +128,7 @@ public class HouseUseCase implements HouseServicePort {
     }
 
     private PublicationStatus determineInitialStatus(LocalDate activePublicationDate) {
-        return activePublicationDate.isAfter(LocalDate.now())
+        return activePublicationDate.isAfter(LocalDate.now(DomainConstants.PUBLICATION_ZONE_ID))
                 ? PublicationStatus.PAUSED
                 : PublicationStatus.PUBLISHED;
     }
